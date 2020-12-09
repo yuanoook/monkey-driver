@@ -1,4 +1,10 @@
 const clickable = require('./clickable')
+const {
+  fromPoint,
+  textNodeFromPoint,
+  getRect,
+  getTextBoundingClientRect
+} = require('./point')
 
 function getKeyNodes({ selector, filter, prioritize } = {}) {
   let nodes = Array.from(document.querySelectorAll(selector || '*'))
@@ -8,30 +14,6 @@ function getKeyNodes({ selector, filter, prioritize } = {}) {
   return prioritize ? prioritize(nodes) : nodes
 }
 
-function fromPoint(x, y) {
-  return textNodeFromPoint(x, y) || document.elementFromPoint(x, y)
-}
-
-function getRect(node) {
-  return node.nodeType == 3
-    ? getTextBoundingClientRect(node)
-    : node.getBoundingClientRect()
-}
-
-function getTextBoundingClientRect(text) {
-  const range = document.createRange()
-  range.selectNode(text)
-  const rect = range.getBoundingClientRect()
-  range.detach()
-  return rect
-}
-function textNodeFromPoint(x, y) {
-  const range = (document.caretRangeFromPoint || document.caretPositionFromPoint)
-    .call(document, x, y)
-  if (!range) return null
-  const node = range.startContainer || range.offsetNode
-  return node.nodeType == 3 ? node : null
-}
 function getKeyTextNodes({
   selector,
   filter,

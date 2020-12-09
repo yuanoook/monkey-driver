@@ -21,7 +21,7 @@ const files = fs.readdirSync(path.resolve(__dirname, '../src')).filter(
 const modules = files.map(f => read(f, '../src')).join('\n')
 const placeholder = /[^\n]*\/\*\*\*\*\* Your Code Here \*\*\*\*\*\//
 const version = /(\/\/ @version\s*)[^\n]*/
-const requires = /[^\n]*=\s*require\(['"][^\n]*/g
+const requires = /[^\n]*([\{\[][^\}\]]*[\}\]]|[^\n]*)\s*=\s*require\(['"][^\n]*/g
 const exportsReg = /module.exports\s*=\s*([\{\[][^\}\]]*[\}\]]|[^\n]*)/g
 const content = read('template.js')
   .replace(placeholder, modules)
