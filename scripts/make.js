@@ -6,6 +6,7 @@ const exec = sh => require('child_process').execSync(sh)
 const output = 'monkeyDriver.js'
 const allowList = [
   'clickable.js',
+  'point.js',
   'getNodes.js',
   'handlers.js',
   'driver.js'
