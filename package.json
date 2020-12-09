@@ -1,0 +1,22 @@
+{
+  "name": "monkey-driver",
+  "version": "1.0.0",
+  "description": "Monkey driver is the best driver :D",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuanoook/monkey-driver.git"
+  },
+  "author": "Rango Yuan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yuanoook/monkey-driver/issues"
+  },
+  "homepage": "https://github.com/yuanoook/monkey-driver#readme",
+  "devDependencies": {
+    "js-beautify": "^1.13.0"
+  }
+}
