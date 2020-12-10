@@ -3,7 +3,7 @@ const { getInputLabel } = require('./getNodes')
 const trackLogs = []
 
 const pushLog = (log, separator) => {
-  const [key] = separator ? log.split(separator) : log
+  const [key] = separator ? log.split(separator) : [log]
   const lastLog = trackLogs[trackLogs.length - 1]
   const [lastKey] = (lastLog && separator) ? lastLog.split(separator) : [lastLog]
   trackLogs[trackLogs.length + (key === lastKey ? -1 : 0)] = log
