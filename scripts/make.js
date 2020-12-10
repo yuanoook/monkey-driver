@@ -10,6 +10,7 @@ const allowList = [
   'getNodes.js',
   'handlers.js',
   'relax.js',
+  'trackers.js',
   'driver.js'
 ]
 const read = (f, dir='') => fs.readFileSync(
@@ -20,16 +21,20 @@ const files = fs.readdirSync(path.resolve(__dirname, '../src')).filter(
   f => allowList.some(r => r.test ? r.test(f) : r === f)
 ).sort((a, b) => allowList.indexOf(a) - allowList.indexOf(b))
 
-const modules = files.map(f => read(f, '../src')).join('\n')
+const requires = /[^\n]*([\{\[][^\}\]]*?[\}\]]|[^\n]*)\s*=\s*require\(['"][^\n]*/g
+const exportsReg = /module.exports\s*=\s*([\{\[][^\}\]]*?[\}\]]|[^\n]*)/g
+const modules = files
+  .map(f => read(f, '../src')
+    .replace(requires, '')
+    .replace(exportsReg, '')
+  )
+  .join('\n')
+
 const placeholder = /[^\n]*\/\*\*\*\*\* Your Code Here \*\*\*\*\*\//
 const version = /(\/\/ @version\s*)[^\n]*/
-const requires = /[^\n]*([\{\[][^\}\]]*[\}\]]|[^\n]*)\s*=\s*require\(['"][^\n]*/g
-const exportsReg = /module.exports\s*=\s*([\{\[][^\}\]]*[\}\]]|[^\n]*)/g
 const content = read('template.js')
-  .replace(placeholder, modules)
   .replace(version, `$1${new Date().getTime()}`)
-  .replace(requires, '')
-  .replace(exportsReg, '')
+  .replace(placeholder, modules)
 
 exec(`cd ${__dirname}/..; mkdir dist || true;`)
 fs.writeFileSync(
