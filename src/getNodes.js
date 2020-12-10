@@ -144,7 +144,7 @@ function getRealLabelText(input) {
 }
 
 function getGuessLabelText(input) {
-  const labels = getGuessLabels(node)
+  const labels = getGuessLabels(input)
   for (let label of labels) {
     const text = getNodeText(label)
     if (text) return text

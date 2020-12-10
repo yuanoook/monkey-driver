@@ -3,6 +3,7 @@ const {
   getKeyNodes,
   getKeyTextNodes,
   getKeyInputs,
+  getInputLabel,
   getKeyImages,
   getKeyButtonsAndLinks
 } = require('./getNodes')
@@ -108,6 +109,7 @@ Object.assign(drive, {
   getKeyNodes,
   getKeyTextNodes,
   getKeyInputs,
+  getInputLabel,
   getKeyImages,
   getKeyButtonsAndLinks,
   fromPoint,
