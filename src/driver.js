@@ -1,7 +1,6 @@
 const { getKeyTextNodes } = require('./getX')
 const handlers = require('./handlers')
-
-const relax = ms => new Promise(resolve => setTimeout(resolve, ms))
+const relax = require('./relax')
 
 const handleCommand = ({ handler, content }) => {
   const node = getKeyTextNodes({
@@ -65,23 +64,28 @@ const execute = async command => {
 }
 
 const drive = async scripts => {
-  const commands = scripts.join('\n').split(/\n/)
+  const commands = scripts
+    .join('\n')
+    .split(/\n/)
+    .map(c => c.trim())
+    .filter(c => c)
+
   for (let command of commands) {
-    await execute(command)
     await relax(100)
+    await execute(command)
   }
 }
 
 window.monkeyDrive = drive
 window.m = window.monkeyDrive
 
-let logScript = ''
+let logScript = 'm`'
 document.addEventListener('click', e => {
   const node = fromPoint(e.clientX, e.clientY)
   console.log(node)
   if (node.nodeType == 3) {
     logScript += ('\n' + node.data.trim().toLowerCase())
-    console.log(logScript)
+    console.log(logScript + '\n`')
   }
 }, {capture: true})
 

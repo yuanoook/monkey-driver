@@ -9,6 +9,7 @@ const allowList = [
   'point.js',
   'getNodes.js',
   'handlers.js',
+  'relax.js',
   'driver.js'
 ]
 const read = (f, dir='') => fs.readFileSync(
