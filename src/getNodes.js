@@ -115,5 +115,5 @@ module.exports = {
   getKeyTextNodes,
   getKeyInputs,
   getKeyImages,
-  getKeyButtonsAndLinks,
+  getKeyButtonsAndLinks
 }

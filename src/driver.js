@@ -1,4 +1,10 @@
-const { getKeyTextNodes } = require('./getX')
+const {
+  getKeyNodes,
+  getKeyTextNodes,
+  getKeyInputs,
+  getKeyImages,
+  getKeyButtonsAndLinks
+} = require('./getNodes')
 const handlers = require('./handlers')
 const relax = require('./relax')
 
@@ -75,6 +81,14 @@ const drive = async scripts => {
     await execute(command)
   }
 }
+
+Object.assign(drive, {
+  getKeyNodes,
+  getKeyTextNodes,
+  getKeyInputs,
+  getKeyImages,
+  getKeyButtonsAndLinks
+})
 
 window.monkeyDrive = drive
 window.m = window.monkeyDrive
