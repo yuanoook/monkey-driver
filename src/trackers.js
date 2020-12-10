@@ -10,9 +10,9 @@ const pushLog = (log, separator) => {
 }
 
 const printLog = () => {
-  console.log(`m\`
-    ${trackLogs.join('\n')}
-  \``)
+  console.log(`m\`\n${
+    trackLogs.join('\n')
+  }\``)
 }
 
 const clickTraker = e => {
