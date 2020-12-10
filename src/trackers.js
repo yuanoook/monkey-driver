@@ -1,3 +1,5 @@
+const { getInputLabel } = require('./getNodes')
+
 const trackLogs = []
 
 const printLog = () => {
@@ -8,15 +10,19 @@ const printLog = () => {
 
 const clickTraker = e => {
   const node = fromPoint(e.clientX, e.clientY)
-  console.log(node)
   if (node.nodeType == 3) {
-    logScript += ('\n' + node.data.trim().toLowerCase())
-    console.log(logScript + '\n`')
+    trackLogs.push(node.data.trim())
+    printLog()
+  } else {
+    console.log(node)
   }
 }
 
 const inputTraker = e => {
   const input = e.target
+  const labelText = getInputLabel(input)
+  trackLogs.push(`${labelText}: ${input.value}`)
+  printLog()
 }
 
 const trackers = {

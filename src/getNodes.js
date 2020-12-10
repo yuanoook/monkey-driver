@@ -57,11 +57,13 @@ function identifiersMatch(identifiers, text) {
   return identifiers.includes(text) ||
     identifiers.includes(text.replace(/[:：]\s*$/, '')) 
 }
+
 function inputNamePlaceholderMatch({node, identifiers}) {
   // TODO, mark monkey-driver-identifier for further use
   if (identifiersMatch(identifiers, node.name)) return true
   if (identifiersMatch(identifiers, node.placeholder)) return true
 }
+
 function inputLabelsMatch({labels, identifiers}) {
   return labels.some(label => getKeyTextNodes({
     container: label,
@@ -72,6 +74,7 @@ function inputLabelsMatch({labels, identifiers}) {
     }
   }).length)
 }
+
 function inputDirectLabelMatch({node, identifiers}) {
   const labels = Array.from(node.labels)
   return inputLabelsMatch({labels, identifiers})
@@ -88,6 +91,7 @@ function getGuessLabels(node) {
     node.offsetWidth < node.offsetWidth * 1.5
   )))
 }
+
 function inputPositionLabelMatch({node, identifiers}) {
   const guessLabels = getGuessLabels(node)
   return guessLabels.some(label => label.nodeType == 3
@@ -95,6 +99,7 @@ function inputPositionLabelMatch({node, identifiers}) {
     : inputLabelsMatch({labels: [label], identifiers})
   )
 }
+
 function getKeyInputs({command, label}) {
   command = command.toLowerCase()
   label = label.toLowerCase()
@@ -110,10 +115,15 @@ function getKeyInputs({command, label}) {
   return directInputs
 }
 
+function getInputLabel(input) {
+  
+}
+
 module.exports = {
   getKeyNodes,
   getKeyTextNodes,
   getKeyInputs,
+  getInputLabel,
   getKeyImages,
   getKeyButtonsAndLinks
 }
