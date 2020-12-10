@@ -75,6 +75,16 @@ const drive = async scripts => {
 window.monkeyDrive = drive
 window.m = window.monkeyDrive
 
+let logScript = ''
+document.addEventListener('click', e => {
+  const node = fromPoint(e.clientX, e.clientY)
+  console.log(node)
+  if (node.nodeType == 3) {
+    logScript += ('\n' + node.data.trim().toLowerCase())
+    console.log(logScript)
+  }
+}, {capture: true})
+
 console.log('Monkey Driver is driving :)')
 
 module.exports = {
