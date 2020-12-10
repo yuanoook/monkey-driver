@@ -81,6 +81,8 @@ window.m = window.monkeyDrive
 
 let logScript = 'm`'
 document.addEventListener('click', e => {
+  if (!e.isTrusted) return
+
   const node = fromPoint(e.clientX, e.clientY)
   console.log(node)
   if (node.nodeType == 3) {
