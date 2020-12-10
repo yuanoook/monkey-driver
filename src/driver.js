@@ -1,3 +1,4 @@
+const clickable = require('./clickable')
 const {
   getKeyNodes,
   getKeyTextNodes,
@@ -5,6 +6,12 @@ const {
   getKeyImages,
   getKeyButtonsAndLinks
 } = require('./getNodes')
+const {
+  fromPoint,
+  textNodeFromPoint,
+  getRect,
+  getTextBoundingClientRect
+} = require('./point')
 const handlers = require('./handlers')
 const relax = require('./relax')
 
@@ -82,14 +89,6 @@ const drive = async scripts => {
   }
 }
 
-Object.assign(drive, {
-  getKeyNodes,
-  getKeyTextNodes,
-  getKeyInputs,
-  getKeyImages,
-  getKeyButtonsAndLinks
-})
-
 window.monkeyDrive = drive
 window.m = window.monkeyDrive
 
@@ -107,8 +106,20 @@ document.addEventListener('click', e => {
 
 console.log('Monkey Driver is driving :)')
 
-module.exports = {
-  execute,
-  drive,
+Object.assign(drive, {
+  clickable,
+  getKeyNodes,
+  getKeyTextNodes,
+  getKeyInputs,
+  getKeyImages,
+  getKeyButtonsAndLinks,
+  fromPoint,
+  textNodeFromPoint,
+  getRect,
+  getTextBoundingClientRect,
   relax
+})
+
+module.exports = {
+  drive
 }
