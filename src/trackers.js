@@ -2,6 +2,13 @@ const { getInputLabel } = require('./getNodes')
 
 const trackLogs = []
 
+const pushLog = (log, separator) => {
+  const [key] = separator ? log.split(separator) : log
+  const lastLog = trackLogs[trackLogs.length - 1]
+  const [lastKey] = (lastLog && separator) ? lastLog.split(separator) : [lastLog]
+  trackLogs[trackLogs.length + (key === lastKey ? -1 : 0)] = log
+}
+
 const printLog = () => {
   console.log(`m\`
     ${trackLogs.join('\n')}
@@ -11,7 +18,7 @@ const printLog = () => {
 const clickTraker = e => {
   const node = fromPoint(e.clientX, e.clientY)
   if (node.nodeType == 3) {
-    trackLogs.push(node.data.trim())
+    pushLog(node.data.trim())
     printLog()
   } else {
     console.log(node)
@@ -21,7 +28,11 @@ const clickTraker = e => {
 const inputTraker = e => {
   const input = e.target
   const label = getInputLabel(input)
-  trackLogs.push(`${label}: ${input.value}`)
+  pushLog(`${
+    label.replace(/\s*[:：]\s*$/, '').trim()
+  }: ${
+    (input.value || '').trim()
+  }`, /[:](.+)/)
   printLog()
 }
 

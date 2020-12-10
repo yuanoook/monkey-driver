@@ -57,7 +57,7 @@ function getKeyButtonsAndLinks(text) {
 function identifiersMatch(identifiers, text) {
   text = (text || '').trim().toLowerCase()
   return identifiers.includes(text) ||
-    identifiers.includes(text.replace(/[:：]\s*$/, '')) 
+    identifiers.includes(text.replace(/\s*[:：]\s*$/, '')) 
 }
 
 function inputNamePlaceholderMatch({node, identifiers}) {
