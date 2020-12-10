@@ -1,17 +1,23 @@
+// Any thing less than 8px is not clickable
+// Char `1` (font-size: 14px) is about 8.9px width
+const MIN_SIZE = 8
+
 function clickable(node) {
-  if (
-    node.offsetHeight < 5 ||
-    node.offsetWidth < 5
-  ) {
-    return false
-  }
+  let tooSmall = (
+    node.offsetHeight !== undefined && node.offsetHeight < MIN_SIZE ||
+    node.offsetWidth !== undefined && node.offsetWidth < MIN_SIZE
+  )
+  if (tooSmall) return false
 
   const rect = node.getBoundingClientRect()
+  tooSmall = rect.width < MIN_SIZE || rect.height < MIN_SIZE
+  if (tooSmall) return false
+
   const inViewPort = !(
-    rect.left <= 0 ||
+    rect.right <= 0 ||
     rect.bottom <= 0 ||
     rect.top >= window.innerHeight ||
-    rect.right >= window.innerWidth
+    rect.left >= window.innerWidth
   )
 
   return inViewPort && (
