@@ -14,6 +14,7 @@ const {
 } = require('./point')
 const handlers = require('./handlers')
 const relax = require('./relax')
+const trackers = require('./trackers')
 
 const handleCommand = ({ handler, content }) => {
   const node = getKeyTextNodes({
@@ -92,17 +93,13 @@ const drive = async scripts => {
 window.monkeyDrive = drive
 window.m = window.monkeyDrive
 
-let logScript = 'm`'
-document.addEventListener('click', e => {
-  if (!e.isTrusted) return
-
-  const node = fromPoint(e.clientX, e.clientY)
-  console.log(node)
-  if (node.nodeType == 3) {
-    logScript += ('\n' + node.data.trim().toLowerCase())
-    console.log(logScript + '\n`')
-  }
-}, {capture: true})
+Object.keys(trackers).forEach(key => {
+  document.addEventListener(
+    key,
+    e => e.isTrusted && trackers[key](e),
+    {capture: true}
+  )
+})
 
 console.log('Monkey Driver is driving :)')
 
@@ -117,7 +114,8 @@ Object.assign(drive, {
   textNodeFromPoint,
   getRect,
   getTextBoundingClientRect,
-  relax
+  relax,
+  trackers
 })
 
 module.exports = {
