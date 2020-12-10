@@ -26,6 +26,8 @@ function getKeyTextNodes({
   let textNode
   while (textNode = iterator.nextNode()) {
     if (!textNode.data.trim()) continue
+    if (!clickable(textNode)) continue
+
     let node = textNode.parentElement
     if (!clickable(node)) continue
     if (selector && !selected.includes(node)) continue
@@ -115,8 +117,46 @@ function getKeyInputs({command, label}) {
   return directInputs
 }
 
-function getInputLabel(input) {
-  
+function getNodeText(node) {
+  if (node.nodeType == 3) {
+    return node.data.trim()
+  }
+
+  const texts = []
+  getKeyTextNodes({
+    container: node,
+    filter: ({textNode}) => {
+      texts.push(textNode.data.trim())
+      return true
+    }
+  })
+  return texts[0]
+}
+
+function getRealLabelText(input) {
+  if (!input.labels) return
+
+  const labels = Array.from(input.labels)
+  for (let label of labels) {
+    const text = getNodeText(label)
+    if (text) return text
+  }
+}
+
+function getGuessLabelText(input) {
+  const labels = getGuessLabels(node)
+  for (let label of labels) {
+    const text = getNodeText(label)
+    if (text) return text
+  }
+}
+
+function getInputLabel(input) { 
+  return input.name ||
+    input.placeholder ||
+    getRealLabelText(input) ||
+    getGuessLabelText(input) ||
+    ''
 }
 
 module.exports = {

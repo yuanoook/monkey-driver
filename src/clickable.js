@@ -1,6 +1,20 @@
+const {
+  fromPoint,
+  getRect
+} = require('./point')
+
 // Any thing less than 8px is not clickable
 // Char `1` (font-size: 14px) is about 8.9px width
 const MIN_SIZE = 8
+
+function clickableAt(node, x, y) {
+  const pNode = fromPoint(x, y)
+  if (!pNode) return false
+  return (pNode === node) || (
+    pNode.nodeType == 3 &&
+    pNode.parentElement === node
+  )
+}
 
 function clickable(node) {
   let tooSmall = (
@@ -9,7 +23,7 @@ function clickable(node) {
   )
   if (tooSmall) return false
 
-  const rect = node.getBoundingClientRect()
+  const rect = getRect(node)
   tooSmall = rect.width < MIN_SIZE || rect.height < MIN_SIZE
   if (tooSmall) return false
 
@@ -27,18 +41,18 @@ function clickable(node) {
      *  6 2 7
      *  9 5 3
      */
-    document.elementFromPoint(rect.x, rect.y) === node ||
-    document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2) === node ||
-    document.elementFromPoint(rect.x + rect.width - 1, rect.y + rect.height - 1) === node ||
+    clickableAt(node, rect.x, rect.y) ||
+    clickableAt(node, rect.x + rect.width / 2, rect.y + rect.height / 2) ||
+    clickableAt(node, rect.x + rect.width - 1, rect.y + rect.height - 1) ||
 
-    document.elementFromPoint(rect.x + rect.width / 2, rect.y) === node ||
-    document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height - 1) === node ||
+    clickableAt(node, rect.x + rect.width / 2, rect.y) ||
+    clickableAt(node, rect.x + rect.width / 2, rect.y + rect.height - 1) ||
 
-    document.elementFromPoint(rect.x, rect.y + rect.height / 2) === node ||
-    document.elementFromPoint(rect.x + rect.width - 1, rect.y + rect.height / 2) === node ||
+    clickableAt(node, rect.x, rect.y + rect.height / 2) ||
+    clickableAt(node, rect.x + rect.width - 1, rect.y + rect.height / 2) ||
 
-    document.elementFromPoint(rect.x + rect.width - 1, rect.y) === node ||
-    document.elementFromPoint(rect.x, rect.y + rect.height - 1) === node
+    clickableAt(node, rect.x + rect.width - 1, rect.y) ||
+    clickableAt(node, rect.x, rect.y + rect.height - 1)
   )
 }
 

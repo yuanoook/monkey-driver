@@ -20,8 +20,8 @@ const clickTraker = e => {
 
 const inputTraker = e => {
   const input = e.target
-  const labelText = getInputLabel(input)
-  trackLogs.push(`${labelText}: ${input.value}`)
+  const label = getInputLabel(input)
+  trackLogs.push(`${label}: ${input.value}`)
   printLog()
 }
 
