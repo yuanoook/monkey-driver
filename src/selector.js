@@ -1,3 +1,4 @@
+// This function should not be called
 function genSelector(node) {
   if (!node.tagName) return []
 

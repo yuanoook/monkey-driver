@@ -86,6 +86,7 @@ function refreshDashboard ({ getLogs }) {
 }
 
 module.exports = {
+  isDashboardOpen,
   openDashboard,
   closeDashboard,
   toggleDashboard,
