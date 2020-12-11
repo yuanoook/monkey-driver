@@ -13,8 +13,8 @@
 // @github        https://github.com/yuanoook/monkey-driver
 // ==/UserScript==
 
-(function () {
+(function (window) {
   'use strict';
 
   /***** Your Code Here *****/
-})();
+})(window.unsafeWindow);
