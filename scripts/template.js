@@ -7,7 +7,9 @@
 // @version       14.0.0
 // @include       *
 // @author        yuanoook
-// @grant         none
+// @grant         GM_setValue
+// @grant         GM_getValue
+// @grant         GM_listValues
 // @github        https://github.com/yuanoook/monkey-driver
 // ==/UserScript==
 

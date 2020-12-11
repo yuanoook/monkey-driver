@@ -48,6 +48,7 @@ const shortCuts = {
 const keydownTracker = e => {
   if (e.target && /input|textarea/i.test(e.target.tagName)) return
   if (e.ctrlKey || e.metaKey || e.shiftKey) return
+  if (!shortCuts[e.key]) return
 
   shortCuts[e.key]()
 }

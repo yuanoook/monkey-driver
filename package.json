@@ -4,6 +4,7 @@
   "description": "Monkey driver is the best driver :D",
   "main": "dist/index.js",
   "scripts": {
+    "make": "node scripts/make.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

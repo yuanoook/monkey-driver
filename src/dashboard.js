@@ -23,10 +23,12 @@ function genDashboard () {
       }
       .monkey-driver-dashboard-container {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         position: absolute;
         margin: auto;
+        padding: 10px;
         top: 0;
         left: 0;
         right: 0;
@@ -36,9 +38,19 @@ function genDashboard () {
         border-radius: 10px;
         background: white;
       }
+      .monkey-driver-dashboard-container h1 {
+        font-size: 1rem;
+      }
+      .monkey-driver-dashboard-content {
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
+        background: rgba(250,250,250);
+        padding: 10px;
+      }
     </style>
     <div class="monkey-driver-dashboard-container">
-      <h1> Hello, I'm Monkey Driver! </h1>
+      <h1 > Hello, I'm Monkey Driver! </h1>
       <div class="monkey-driver-dashboard-content"></div>
     </div>
   `
