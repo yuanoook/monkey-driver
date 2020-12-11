@@ -1,6 +1,7 @@
 const storage = require('./storage')
 const { getInputLabel } = require('./getNodes')
 const {
+  isDashboardOpen,
   toggleDashboard,
   closeDashboard,
   refreshDashboard
@@ -27,6 +28,8 @@ const printLog = () => {
 }
 
 const clickTraker = e => {
+  if (isDashboardOpen()) return
+
   const node = fromPoint(e.clientX, e.clientY)
   if (node.nodeType == 3) {
     pushLog(node.data.trim())
@@ -37,6 +40,8 @@ const clickTraker = e => {
 }
 
 const inputTraker = e => {
+  if (isDashboardOpen()) return
+
   const input = e.target
   const label = getInputLabel(input)
   pushLog(`${

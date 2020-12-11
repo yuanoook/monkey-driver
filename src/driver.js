@@ -14,7 +14,6 @@ const {
   getRect,
   getTextBoundingClientRect
 } = require('./point')
-const { isDashboardOpen } = require('./dashboard')
 const handlers = require('./handlers')
 const relax = require('./relax')
 const trackers = require('./trackers')
@@ -97,9 +96,9 @@ window.monkeyDrive = drive
 window.m = window.monkeyDrive
 
 Object.keys(trackers).forEach(key => {
-  document.addEventListener(key, e =>
-    e.isTrusted && !isDashboardOpen() && trackers[key](e),
-  {capture: true})
+  document.addEventListener(key, e => {
+    return e.isTrusted && trackers[key](e)
+  }, {capture: true})
 })
 
 console.log('Monkey Driver is driving :)')
