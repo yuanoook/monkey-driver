@@ -42,7 +42,7 @@ const inputTraker = e => {
 }
 
 const shortCuts = {
-  "1": toggleDashboard
+  "1": () => toggleDashboard({ getLogs })
 }
 
 const keydownTracker = e => {
@@ -53,6 +53,7 @@ const keydownTracker = e => {
 }
 
 const trackers = {
+  getLogs,
   click: clickTraker,
   input: inputTraker,
   keydown: keydownTracker

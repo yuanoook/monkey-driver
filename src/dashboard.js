@@ -23,28 +23,38 @@ function genDashboard () {
       }
       .monkey-driver-dashboard-container {
         display: flex;
+        align-items: center;
+        justify-content: center;
         position: absolute;
         margin: auto;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        width: 0.5vw;
-        height: 0.5vh;
+        width: 50vw;
+        height: 50vh;
         border-radius: 10px;
         background: white;
       }
     </style>
     <div class="monkey-driver-dashboard-container">
-      Hello, I'm Monkey Driver!
+      <h1> Hello, I'm Monkey Driver! </h1>
+      <div class="monkey-driver-dashboard-content"></div>
     </div>
   `
   document.body.appendChild(dashboard)
 }
 
-function toggleDashboard () {
+function renderContent () {
+  const content = document.querySelector('.monkey-driver-dashboard-content')
+  const logs = getLogs()
+  content.innerHTML = logs.join('<br/>')
+}
+
+function toggleDashboard ({ getLogs }) {
   if (!hasDashboard()) genDashboard()
   document.body.classList.toggle('monkey-driver-dashboard-open')
+  renderContent({ getLogs })
 }
 
 module.exports = {
