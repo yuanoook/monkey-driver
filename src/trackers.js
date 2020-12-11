@@ -1,6 +1,10 @@
 const storage = require('./storage')
 const { getInputLabel } = require('./getNodes')
-const { toggleDashboard } = require('./dashboard')
+const {
+  toggleDashboard,
+  closeDashboard,
+  refreshDashboard
+} = require('./dashboard')
 const getLogs = () => storage.getValue('trackLogs') || []
 const setLogs = (logs) => storage.setValue('trackLogs', logs)
 
@@ -12,6 +16,8 @@ const pushLog = (log, separator) => {
   trackLogs[trackLogs.length + (key === lastKey ? -1 : 0)] = log
   setLogs(trackLogs)
 }
+
+const clearLog = () => setLogs([])
 
 const printLog = () => {
   const trackLogs = getLogs()
@@ -42,7 +48,9 @@ const inputTraker = e => {
 }
 
 const shortCuts = {
-  "1": () => toggleDashboard({ getLogs })
+  "0": () => (clearLog(), refreshDashboard({getLogs})),
+  "1": () => toggleDashboard({getLogs}),
+  "Escape": closeDashboard
 }
 
 const keydownTracker = e => {
@@ -54,7 +62,9 @@ const keydownTracker = e => {
 }
 
 const trackers = {
+  clearLog,
   getLogs,
+  printLog,
   click: clickTraker,
   input: inputTraker,
   keydown: keydownTracker
