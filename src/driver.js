@@ -1,3 +1,4 @@
+const storage = require('./storage')
 const clickable = require('./clickable')
 const {
   getKeyNodes,
@@ -105,6 +106,7 @@ Object.keys(trackers).forEach(key => {
 console.log('Monkey Driver is driving :)')
 
 Object.assign(drive, {
+  storage,
   clickable,
   getKeyNodes,
   getKeyTextNodes,
