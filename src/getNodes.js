@@ -43,7 +43,7 @@ function getKeyImages() {
   return getKeyNodes({ selector: 'img, svg' })
 }
 
-function getKeyButtonsAndLinks(text) {
+function getKeyButtonsAndLinks(text = '') {
   text = text.toLowerCase()
   return getKeyTextNodes({
     selector: 'button, button *, a, a *, li, li *',
@@ -61,7 +61,6 @@ function identifiersMatch(identifiers, text) {
 }
 
 function inputNamePlaceholderMatch({node, identifiers}) {
-  // TODO, mark monkey-driver-identifier for further use
   if (identifiersMatch(identifiers, node.name)) return true
   if (identifiersMatch(identifiers, node.placeholder)) return true
 }
@@ -70,7 +69,6 @@ function inputLabelsMatch({labels, identifiers}) {
   return labels.some(label => getKeyTextNodes({
     container: label,
     filter: ({node, textNode}) => {
-      // TODO, mark monkey-driver-identifier for further use
       if (identifiersMatch(identifiers, textNode.data)) return true
       if (identifiersMatch(identifiers, node.innerText)) return true
     }
