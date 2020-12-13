@@ -1,4 +1,5 @@
-const { getKeyTextNodes } = require('./getNodes')
+const relax = require('./relax')
+const { getKeyElementsWithText } = require('./getNodes')
 
 const nap = ms => new Promise(r => setTimeout(r, ms))
 
@@ -7,7 +8,7 @@ const loadingTests = [
 ]
 
 function isLoading () {
-  const nodes = getKeyTextNodes()
+  const nodes = getKeyElementsWithText()
   const loadings = nodes.filter(
     node => loadingTests.some(t => t(node))
   )
@@ -19,9 +20,9 @@ async function waitLoading () {
   return isLoading() ? waitLoading() : null
 }
 
-async function relax (ms) {
+async function relax (ms = 100) {
   await waitLoading()
-  await nap(100)
+  await nap(ms)
 }
 
 module.exports = relax

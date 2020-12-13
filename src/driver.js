@@ -1,8 +1,13 @@
 const storage = require('./storage')
+const {
+  getKarma,
+  setKarma
+} = require('karma')
 const clickable = require('./clickable')
 const {
-  getKeyNodes,
+  getKeyElements,
   getKeyTextNodes,
+  getKeyElementsWithText,
   getKeyInputs,
   getInputLabel,
   getKeyImages,
@@ -19,7 +24,7 @@ const relax = require('./relax')
 const trackers = require('./trackers')
 
 const handleCommand = ({ handler, content }) => {
-  const node = getKeyTextNodes({
+  const node = getKeyElementsWithText({
     selector: handler.selector,
     filter: handler.filter && (node => handler.filter({node, content})),
     prioritize: handler.prioritize && (nodes => handler.prioritize(nodes, content))
@@ -96,9 +101,8 @@ window.monkeyDrive = drive
 window.m = window.monkeyDrive
 
 Object.keys(trackers).forEach(key => {
-  document.addEventListener(key, e => {
-    return e.isTrusted && trackers[key](e)
-  }, {capture: true})
+  document.addEventListener(key, e => e.isTrusted && trackers[key](e), true)
+  document.addEventListener(key, e => e.isTrusted && trackers[key](e), false)
 })
 
 console.log('Monkey Driver is driving :)')
@@ -106,8 +110,9 @@ console.log('Monkey Driver is driving :)')
 Object.assign(drive, {
   storage,
   clickable,
-  getKeyNodes,
+  getKeyElements,
   getKeyTextNodes,
+  getKeyElementsWithText,
   getKeyInputs,
   getInputLabel,
   getKeyImages,
@@ -117,7 +122,9 @@ Object.assign(drive, {
   getRect,
   getTextBoundingClientRect,
   relax,
-  trackers
+  trackers,
+  getKarma,
+  setKarma
 })
 
 module.exports = {

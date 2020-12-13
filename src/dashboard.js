@@ -65,24 +65,24 @@ function closeDashboard () {
   document.body.classList.remove('monkey-driver-dashboard-open')
 }
 
-function openDashboard ({ getLogs }) {
+function openDashboard ({ getTrackLogs }) {
   if (!hasDashboard()) genDashboard()
   document.body.classList.add('monkey-driver-dashboard-open')
-  renderContent({ getLogs })
+  renderContent({ getTrackLogs })
 }
 
 function renderContent () {
   const content = document.querySelector('.monkey-driver-dashboard-content')
-  const logs = getLogs()
+  const logs = getTrackLogs()
   content.innerHTML = logs.join('<br/>')
 }
 
-function toggleDashboard ({ getLogs }) {
-  return isDashboardOpen() ? closeDashboard() : openDashboard({getLogs})
+function toggleDashboard ({ getTrackLogs }) {
+  return isDashboardOpen() ? closeDashboard() : openDashboard({getTrackLogs})
 }
 
-function refreshDashboard ({ getLogs }) {
-  return isDashboardOpen() && openDashboard({getLogs})
+function refreshDashboard ({ getTrackLogs }) {
+  return isDashboardOpen() && openDashboard({getTrackLogs})
 }
 
 module.exports = {

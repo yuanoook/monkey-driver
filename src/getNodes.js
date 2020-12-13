@@ -6,7 +6,7 @@ const {
   getTextBoundingClientRect
 } = require('./point')
 
-function getKeyNodes({ selector, filter, prioritize } = {}) {
+function getKeyElements({ selector, filter, prioritize } = {}) {
   let nodes = Array.from(document.querySelectorAll(selector || '*'))
   nodes = nodes.filter(
     node => clickable(node) && (!filter || filter({node}))
@@ -14,38 +14,60 @@ function getKeyNodes({ selector, filter, prioritize } = {}) {
   return prioritize ? prioritize(nodes) : nodes
 }
 
-function getKeyTextNodes({
+function getClickableTextNodes({
+  filterMap,
+  container = document.body
+}) {
+  const iterator = document.createNodeIterator(container, NodeFilter.SHOW_TEXT)
+  const results = new Set()
+  let textNode
+  while (textNode = iterator.nextNode()) {
+    if (!textNode.data.trim()) continue
+    if (!clickable(textNode)) continue
+  
+    if (filterMap) {
+      const fmResult = filterMap(textNode)
+      if (!fmResult) continue
+
+      results.add(fmResult)
+      continue
+    }
+
+    results.add(textNode)
+  }
+  return Array.from(results)
+}
+
+function getKeyElementsWithText({
   selector,
   filter,
   prioritize,
   container = document.body
 } = {}) {
-  const iterator = document.createNodeIterator(container, NodeFilter.SHOW_TEXT)
-  const keyNodes = new Set()
   const selected = selector && Array.from(document.querySelectorAll(selector) || [])
-  let textNode
-  while (textNode = iterator.nextNode()) {
-    if (!textNode.data.trim()) continue
-    if (!clickable(textNode)) continue
 
-    let node = textNode.parentElement
-    if (!clickable(node)) continue
-    if (selector && !selected.includes(node)) continue
-    if (filter && !filter({node, textNode})) continue
+  const elements = getClickableTextNodes({
+    container,
+    filterMap: textNode => {
+      let element = textNode.parentElement
+      if (!clickable(element)) return
+      if (selector && !selected.includes(element)) return
+      if (filter && !filter({node: element, textNode})) return
 
-    keyNodes.add(node)
-  }
-  const nodes = Array.from(keyNodes)
-  return prioritize ? prioritize(nodes) : nodes
+      return element
+    }
+  })
+
+  return prioritize ? prioritize(elements) : elements
 }
 
 function getKeyImages() {
-  return getKeyNodes({ selector: 'img, svg' })
+  return getKeyElements({ selector: 'img, svg' })
 }
 
 function getKeyButtonsAndLinks(text = '') {
   text = text.toLowerCase()
-  return getKeyTextNodes({
+  return getKeyElementsWithText({
     selector: 'button, button *, a, a *, li, li *',
     filter: text && (({node, textNode}) =>
       textNode.data.trim().toLowerCase() === text ||
@@ -66,7 +88,7 @@ function inputNamePlaceholderMatch({node, identifiers}) {
 }
 
 function inputLabelsMatch({labels, identifiers}) {
-  return labels.some(label => getKeyTextNodes({
+  return labels.some(label => getKeyElementsWithText({
     container: label,
     filter: ({node, textNode}) => {
       if (identifiersMatch(identifiers, textNode.data)) return true
@@ -104,7 +126,7 @@ function getKeyInputs({command, label}) {
   command = command.toLowerCase()
   label = label.toLowerCase()
   const identifiers = [command, label]
-  const directInputs = getKeyNodes({
+  const directInputs = getKeyElements({
     selector: 'input, textarea',
     filter: ({node}) => {
       if (inputNamePlaceholderMatch({node, identifiers})) return true
@@ -121,7 +143,7 @@ function getNodeText(node) {
   }
 
   const texts = []
-  getKeyTextNodes({
+  getKeyElementsWithText({
     container: node,
     filter: ({textNode}) => {
       texts.push(textNode.data.trim())
@@ -158,8 +180,9 @@ function getInputLabel(input) {
 }
 
 module.exports = {
-  getKeyNodes,
-  getKeyTextNodes,
+  getKeyElements,
+  getClickableTextNodes,
+  getKeyElementsWithText,
   getKeyInputs,
   getInputLabel,
   getKeyImages,

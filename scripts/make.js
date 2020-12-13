@@ -9,10 +9,13 @@ const allowList = [
   'clickable.js',
   'point.js',
   'getNodes.js',
+  'karma.js',
+
   'handlers.js',
   'relax.js',
   'dashboard.js',
   'trackers.js',
+
   'driver.js'
 ]
 const read = (f, dir='') => fs.readFileSync(

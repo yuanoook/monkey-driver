@@ -6,22 +6,27 @@ const {
   closeDashboard,
   refreshDashboard
 } = require('./dashboard')
-const getLogs = () => storage.getValue('trackLogs') || []
-const setLogs = (logs) => storage.setValue('trackLogs', logs)
+const {
+  logKarmaResults
+} = require('./karma')
+
+const getTrackLogs = () => storage.getValue('trackLogs') || []
+const setTrackLogs = (logs) => storage.setValue('trackLogs', logs)
+const clearTrackLogs = () => setTrackLogs([])
 
 const pushLog = (log, separator) => {
-  const trackLogs = getLogs()
+  logKarmaResults({getTrackLogs, relax: false})
+
+  const trackLogs = getTrackLogs()
   const [key] = separator ? log.split(separator) : [log]
-  const lastLog = trackLogs[trackLogs.length - 1]
+  const [, lastLog] = trackLogs[trackLogs.length - 1] || [NaN, NaN]
   const [lastKey] = (lastLog && separator) ? lastLog.split(separator) : [lastLog]
-  trackLogs[trackLogs.length + (key === lastKey ? -1 : 0)] = log
-  setLogs(trackLogs)
+  trackLogs[trackLogs.length + (key === lastKey ? -1 : 0)] = [+new Date(), log]
+  setTrackLogs(trackLogs)
 }
 
-const clearLog = () => setLogs([])
-
 const printLog = () => {
-  const trackLogs = getLogs()
+  const trackLogs = getTrackLogs()
   console.log(`m\`\n${
     trackLogs.join('\n')
   }\``)
@@ -29,6 +34,7 @@ const printLog = () => {
 
 const clickTraker = e => {
   if (isDashboardOpen()) return
+  if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults({getTrackLogs})
 
   const node = fromPoint(e.clientX, e.clientY)
   if (node.nodeType == 3) {
@@ -41,6 +47,7 @@ const clickTraker = e => {
 
 const inputTraker = e => {
   if (isDashboardOpen()) return
+  if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults({getTrackLogs})
 
   const input = e.target
   const label = getInputLabel(input)
@@ -53,8 +60,8 @@ const inputTraker = e => {
 }
 
 const shortCuts = {
-  "0": () => (clearLog(), refreshDashboard({getLogs})),
-  "1": () => toggleDashboard({getLogs}),
+  "0": () => (clearTrackLogs(), refreshDashboard({getTrackLogs})),
+  "1": () => toggleDashboard({getTrackLogs}),
   "Escape": closeDashboard
 }
 
@@ -62,13 +69,14 @@ const keydownTracker = e => {
   if (e.target && /input|textarea/i.test(e.target.tagName)) return
   if (e.ctrlKey || e.metaKey || e.shiftKey) return
   if (!shortCuts[e.key]) return
+  if (e.eventPhase === Event.BUBBLING_PHASE) return
 
   shortCuts[e.key]()
 }
 
 const trackers = {
-  clearLog,
-  getLogs,
+  clearTrackLogs,
+  getTrackLogs,
   printLog,
   click: clickTraker,
   input: inputTraker,
