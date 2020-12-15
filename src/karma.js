@@ -29,6 +29,10 @@ function getKarma () {
   return storage.getValue('karma') || {}
 }
 
+function clearKarma () {
+  return storage.setValue('karma', {})
+}
+
 function setKarma (causes, results) {
   causes = Array.from(new Set(causes))
   if (!causes || !causes.length) return
@@ -131,6 +135,7 @@ function analysisKarma () {
 
 const karma = {
   getKarma,
+  clearKarma,
   setKarma,
   getKarmaResults,
   logKarmaResults,

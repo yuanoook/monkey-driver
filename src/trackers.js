@@ -4,6 +4,7 @@ const {
   setTrackLogs,
   printTrackLogs,
   clearTrackLogs,
+  clearKarma,
   addTrackLog,
   getLastTrackInfo,
   updateLastTrackLog
@@ -57,7 +58,7 @@ const inputTraker = e => {
 }
 
 const shortCuts = {
-  "0": () => (clearTrackLogs(), refreshDashboard()),
+  "0": () => (clearTrackLogs(), clearKarma(), refreshDashboard()),
   "1": toggleDashboard,
   "Escape": closeDashboard
 }
