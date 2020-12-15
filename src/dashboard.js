@@ -1,3 +1,9 @@
+const {
+  TRACK_TYPES,
+  getTrackLogs
+} = require('./storage')
+const { formatDateTime } = require('./date')
+
 function hasDashboard () {
   return Boolean(document.body.querySelector('.monkey-driver-dashboard'))
 }
@@ -65,24 +71,26 @@ function closeDashboard () {
   document.body.classList.remove('monkey-driver-dashboard-open')
 }
 
-function openDashboard ({ getTrackLogs }) {
+function openDashboard () {
   if (!hasDashboard()) genDashboard()
   document.body.classList.add('monkey-driver-dashboard-open')
-  renderContent({ getTrackLogs })
+  renderContent()
 }
 
 function renderContent () {
   const content = document.querySelector('.monkey-driver-dashboard-content')
-  const logs = getTrackLogs()
-  content.innerHTML = logs.join('<br/>')
+  const logs = getTrackLogs(TRACK_TYPES.ACTION)
+  content.innerHTML = logs.map(
+    ([logAt, logContent]) => `${formatDateTime(logAt)} ${logContent}`
+  ).join('<br/>')
 }
 
-function toggleDashboard ({ getTrackLogs }) {
-  return isDashboardOpen() ? closeDashboard() : openDashboard({getTrackLogs})
+function toggleDashboard () {
+  return isDashboardOpen() ? closeDashboard() : openDashboard()
 }
 
-function refreshDashboard ({ getTrackLogs }) {
-  return isDashboardOpen() && openDashboard({getTrackLogs})
+function refreshDashboard () {
+  return isDashboardOpen() && openDashboard()
 }
 
 module.exports = {

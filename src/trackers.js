@@ -1,4 +1,13 @@
-const storage = require('./storage')
+const {
+  TRACK_TYPES,
+  getTrackLogs,
+  setTrackLogs,
+  printTrackLogs,
+  clearTrackLogs,
+  addTrackLog,
+  getLastTrackInfo,
+  updateLastTrackLog
+} = require('./storage')
 const { getInputLabel } = require('./getNodes')
 const {
   isDashboardOpen,
@@ -10,36 +19,25 @@ const {
   logKarmaResults
 } = require('./karma')
 
-const getTrackLogs = () => storage.getValue('trackLogs') || []
-const setTrackLogs = (logs) => storage.setValue('trackLogs', logs)
-const clearTrackLogs = () => setTrackLogs([])
+const pushActionLog = (log, separator) => {
+  logKarmaResults(true)
 
-const pushLog = (log, separator) => {
-  logKarmaResults({getTrackLogs, relax: false})
-
-  const trackLogs = getTrackLogs()
   const [key] = separator ? log.split(separator) : [log]
-  const [, lastLog] = trackLogs[trackLogs.length - 1] || [NaN, NaN]
+  const [[,lastLog] = [NaN, NaN], lastIndex] = getLastTrackInfo(TRACK_TYPES.ACTION)
   const [lastKey] = (lastLog && separator) ? lastLog.split(separator) : [lastLog]
-  trackLogs[trackLogs.length + (key === lastKey ? -1 : 0)] = [+new Date(), log]
-  setTrackLogs(trackLogs)
-}
+  const newLog = [+new Date(), log, TRACK_TYPES.ACTION]
 
-const printLog = () => {
-  const trackLogs = getTrackLogs()
-  console.log(`m\`\n${
-    trackLogs.join('\n')
-  }\``)
+  addTrackLog(newLog, key === lastKey ? lastIndex : undefined)
+  printTrackLogs(TRACK_TYPES.ACTION)
 }
 
 const clickTraker = e => {
   if (isDashboardOpen()) return
-  if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults({getTrackLogs})
+  if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults()
 
   const node = fromPoint(e.clientX, e.clientY)
   if (node.nodeType == 3) {
-    pushLog(node.data.trim())
-    printLog()
+    pushActionLog(node.data.trim())
   } else {
     console.log(node)
   }
@@ -47,21 +45,20 @@ const clickTraker = e => {
 
 const inputTraker = e => {
   if (isDashboardOpen()) return
-  if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults({getTrackLogs})
+  if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults()
 
   const input = e.target
   const label = getInputLabel(input)
-  pushLog(`${
+  pushActionLog(`${
     label.replace(/\s*[:：]\s*$/, '').trim()
   }: ${
     (input.value || '').trim()
   }`, /[:](.+)/)
-  printLog()
 }
 
 const shortCuts = {
-  "0": () => (clearTrackLogs(), refreshDashboard({getTrackLogs})),
-  "1": () => toggleDashboard({getTrackLogs}),
+  "0": () => (clearTrackLogs(), refreshDashboard()),
+  "1": toggleDashboard,
   "Escape": closeDashboard
 }
 
