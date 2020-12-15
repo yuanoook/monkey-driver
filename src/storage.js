@@ -14,8 +14,9 @@ function listValues () {
 }
 
 const TRACK_TYPES = {
-  ACTION: 'ACTION',
-  RESULTS: 'RESULTS'
+  ACTION: 1,
+  SNAPSHOTS: 2,
+  ANALYSIS: 3
 }
 
 function getTrackLogs (type) {
@@ -46,14 +47,16 @@ function addTrackLog (log, index) {
   setTrackLogs(logs)
 }
 
-function getLastTrackInfo (type) {
+function getLastTrackInfo (type, maxIndex = Infinity) {
   const allLogs = getTrackLogs()
-  const logs = allLogs.filter(([,,logType]) => logType === type)
+  const logs = allLogs.filter(
+    ([,,logType], index) => logType === type && index < maxIndex
+  )
   const lastLog = logs[logs.length - 1]
   const index = lastLog
     ? allLogs.findIndex(lastLog)
     : allLogs.length
-  return [lastLog, index]
+  return [lastLog, index, logs, allLogs]
 }
 
 function updateLastTrackLog (log) {

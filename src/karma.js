@@ -1,21 +1,26 @@
-const storage = require('./storage')
+const {
+  setValue,
+  getValue,
+  TRACK_TYPES,
+  getTrackLogs,
+  addTrackLog,
+  getLastTrackInfo,
+  updateLastTrackLog
+} = require('./storage')
 const relax = require('./relax')
 const {
   getKeyTextNodes
 } = require('./getNodes')
 
 const SNAPSHOT_SEPARATOR = '\0\0\0\0\0'
-const getKarmaSnapshots = () => storage.getValue('karmaSnapshots') || []
-const setKarmaSnapshots = (logs) => storage.setValue('karmaSnapshots', logs)
-const clearKarmaSnapshots = () => setKarmaSnapshots([])
+const getKarmaSnapshots = () => getTrackLogs(TRACK_TYPES.SNAPSHOTS)
 
-const pushKarmaSnapshot = shot => {
+const pushKarmaSnapshot = shotContent => {
   const snapshots = getKarmaSnapshots()
-  const [, lastShot] = snapshots[snapshots.length - 1] || [NaN, NaN]
-  if (lastShot === shot) return
+  const [[, lastContent]] = getLastTrackInfo(TRACK_TYPES.SNAPSHOTS)
+  if (lastContent === shotContent) return
 
-  snapshots[snapshots.length] = [+new Date(), shot]
-  setKarmaSnapshots(snapshots)
+  addTrackLog([+new Date(), shotContent, TRACK_TYPES.SNAPSHOTS])
 }
 
 function getKarma () {
@@ -36,6 +41,15 @@ function setKarma (causes, results) {
   storage.setValue('karma', karma)
 }
 
+const karmaAnalysts = {
+  [TRACK_TYPES.ACTION]: (log, prevAction) => {
+    // TODO: add some cool stuff here
+  },
+  [TRACK_TYPES.SNAPSHOTS]: (log, prevAction) => {
+    // TODO: add some cool stuff here
+  }
+}
+
 function getKarmaResults () {
   return getKeyTextNodes({
     filterMap: textNode => textNode.data.trim().toLowerCase()
@@ -51,35 +65,53 @@ async function logKarmaResults ({getTrackLogs, relax = true}) {
   pushKarmaSnapshot(
     getKarmaResults().join(SNAPSHOT_SEPARATOR)
   )
-  analysisKarma({getTrackLogs})
+  analysisKarma()
 }
 
-// TODO: fix this shitty function, don't work when you're tired man!
-function analysisKarma ({getTrackLogs}) {
-  const lastAnalysisAt = (+storage.getValue('lastKarmaAnalysisAt')) || 0
-  storage.setValue('lastKarmaAnalysisAt', +new Date())
-
-  const snapshots = getKarmaSnapshots()
-  const trackLogs = getTrackLogs()
-
-  let snapIndex = allSnapshots.findIndex(([shotAt]) => shotAt >= lastAnalysisAt) - 2
-  snapIndex = Math.max(snapIndex, 0)
-
-  for (let i = snapIndex; i < snapshots.length - 1; i++) {
-    const shot1 = snapshots[i]
-    const shot2 = snapshots[i + 1]
-    if (!shot1 || !shot2) continue
-
-    const [shot1At,] = shot1
-    const [shot2At,] = shot2
-    const trackLogIndex = trackLogs.findIndexOf(([logAt]) => logAt >= shot2At) - 1
-
-    const filteredTrackLog = trackLogs.filter(
-      ([logAt]) => logAt >= shot1At && logAt < shot2At
-    )
-    const trackLog = filteredTrackLog[filteredTrackLog.length - 1]
-
+function getPrevActionLog ({
+  log,
+  prevLog,
+  prevLogIndex,
+  lastAnalysisIndex
+}) {
+  const [logAt] = log
+  if (!prevLog) {
+    [prevLog, prevLogIndex] = getLastTrackInfo(TRACK_TYPES.ACTION, lastAnalysisIndex)
   }
+  if (!prevLog) return
+
+  const [preLogAt, prevLogContent, prevLogType] = prevLog
+
+  if (prevLogType !== TRACK_TYPES.ACTION) return
+  if (logAt - preLogAt > 150 * 1000) return // 2.5 Minutes, too old
+
+  return prevLog
+}
+
+function analysisKarma () {
+  const [, lastAnalysisIndex, , allLogs] = getLastTrackInfo(TRACK_TYPES.ANALYSIS)
+  const logs = allLogs.slice(lastAnalysisIndex + 1)
+  if (!logs.length) return
+
+  let hit = false
+  for (let i = 0; i < logs.length; i++) {
+    const log = logs[i]
+    const [logAt, , type] = log
+    if (!karmaAnalysts[type]) continue
+
+    const prevAction = getPrevActionLog({
+      log,
+      prevLog: logs[i - 1],
+      prevLogIndex: i - 1,
+      lastAnalysisIndex
+    })
+    if (!prevAction) continue
+
+    hit = hit || karmaAnalysts[type](log, prevAction)
+  }
+
+  if (hit) addTrackLog([+new Date(), , TRACK_TYPES.ANALYSIS])
+  return hit
 }
 
 module.exports = {

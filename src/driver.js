@@ -22,6 +22,7 @@ const {
 const handlers = require('./handlers')
 const relax = require('./relax')
 const trackers = require('./trackers')
+const { formatDateTime } = require('./date')
 
 const handleCommand = ({ handler, content }) => {
   const node = getKeyElementsWithText({
@@ -124,7 +125,8 @@ Object.assign(drive, {
   relax,
   trackers,
   getKarma,
-  setKarma
+  setKarma,
+  formatDateTime
 })
 
 module.exports = {
