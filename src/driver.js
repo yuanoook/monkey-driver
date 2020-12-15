@@ -3,7 +3,7 @@ const karma = require('karma')
 const clickable = require('./clickable')
 const {
   getKeyElements,
-  getKeyTextNodes,
+  getClickableTextNodes,
   getKeyElementsWithText,
   getKeyInputs,
   getInputLabel,
@@ -109,7 +109,7 @@ Object.assign(drive, {
   karma,
   clickable,
   getKeyElements,
-  getKeyTextNodes,
+  getClickableTextNodes,
   getKeyElementsWithText,
   getKeyInputs,
   getInputLabel,

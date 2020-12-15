@@ -7,11 +7,11 @@ const output = 'monkeyDriver.js'
 const allowList = [
   'date.js',
   'storage.js',
-  'karma.js',
 
   'clickable.js',
   'point.js',
   'getNodes.js',
+  'karma.js',
 
   'handlers.js',
   'relax.js',

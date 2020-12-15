@@ -40,9 +40,9 @@ function clearTrackLogs () {
   return setTrackLogs([])
 }
 
-function addTrackLog (log, index) {
+function addTrackLog (log, index = NaN) {
   const logs = getTrackLogs()
-  index = Number.isNumber(index) ? index : logs.length
+  index = Number.isNaN(index) ? logs.length : index
   logs[index] = log
   setTrackLogs(logs)
 }
@@ -54,7 +54,7 @@ function getLastTrackInfo (type, maxIndex = Infinity) {
   )
   const lastLog = logs[logs.length - 1]
   const index = lastLog
-    ? allLogs.findIndex(lastLog)
+    ? allLogs.indexOf(lastLog)
     : allLogs.length
   return [lastLog, index, logs, allLogs]
 }

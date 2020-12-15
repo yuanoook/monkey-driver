@@ -9,7 +9,7 @@ const {
 } = require('./storage')
 const relax = require('./relax')
 const {
-  getKeyTextNodes
+  getClickableTextNodes
 } = require('./getNodes')
 
 const INPUT_ACTION_REG = /[:]\s(.+)/
@@ -18,7 +18,8 @@ const getKarmaSnapshots = () => getTrackLogs(TRACK_TYPES.SNAPSHOTS)
 
 const pushKarmaSnapshot = shotContent => {
   const snapshots = getKarmaSnapshots()
-  const [[, lastContent]] = getLastTrackInfo(TRACK_TYPES.SNAPSHOTS)
+  const [lastShot] = getLastTrackInfo(TRACK_TYPES.SNAPSHOTS)
+  const [, lastContent] = lastShot || []
   if (lastContent === shotContent) return
 
   addTrackLog([+new Date(), shotContent, TRACK_TYPES.SNAPSHOTS])
@@ -47,14 +48,14 @@ function setKarma (causes, results) {
 
 const karmaAnalysts = {
   [TRACK_TYPES.ACTION]: (log, prevAction) => {
-    const [[content], [prevContent]] = [log, prevAction]
+    const [[, content], [, prevContent]] = [log, prevAction]
     const [key] = content.split(INPUT_ACTION_REG)
     const [prevKey] = prevContent.split(INPUT_ACTION_REG)
 
     setKarma([prevKey, prevContent], [key, content])
   },
   [TRACK_TYPES.SNAPSHOTS]: (log, prevAction) => {
-    const [[content], [prevContent]] = [log, prevAction]
+    const [[, content], [, prevContent]] = [log, prevAction]
     const results = content.split(SNAPSHOT_SEPARATOR)
     const [prevKey] = prevContent.split(INPUT_ACTION_REG)
 
@@ -63,7 +64,7 @@ const karmaAnalysts = {
 }
 
 function getKarmaResults () {
-  return getKeyTextNodes({
+  return getClickableTextNodes({
     filterMap: textNode => textNode.data.trim().toLowerCase()
   }).sort()
 }
@@ -101,7 +102,9 @@ function getPrevActionLog ({
 }
 
 function analysisKarma () {
-  const [, lastAnalysisIndex, , allLogs] = getLastTrackInfo(TRACK_TYPES.ANALYSIS)
+  let [, lastAnalysisIndex, , allLogs] = getLastTrackInfo(TRACK_TYPES.ANALYSIS)
+  lastAnalysisIndex = lastAnalysisIndex === allLogs.length ? -1 : lastAnalysisIndex
+
   const logs = allLogs.slice(lastAnalysisIndex + 1)
   if (!logs.length) return
 
