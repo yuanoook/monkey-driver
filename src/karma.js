@@ -68,8 +68,8 @@ function getKarmaResults () {
   }).sort()
 }
 
-async function logKarmaResults ({getTrackLogs, relax = true}) {
-  if (relax) await relax()
+async function logKarmaResults (immediate = false) {
+  if (!immediate) await relax()
   pushKarmaSnapshot(
     getKarmaResults().join(SNAPSHOT_SEPARATOR)
   )

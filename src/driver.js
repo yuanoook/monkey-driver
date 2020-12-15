@@ -96,7 +96,6 @@ const drive = async scripts => {
 }
 
 window.monkeyDrive = drive
-window.m = window.monkeyDrive
 
 Object.keys(trackers).forEach(key => {
   document.addEventListener(key, e => e.isTrusted && trackers[key](e), true)

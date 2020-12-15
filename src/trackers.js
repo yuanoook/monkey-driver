@@ -74,7 +74,6 @@ const keydownTracker = e => {
 const trackers = {
   clearTrackLogs,
   getTrackLogs,
-  printLog,
   click: clickTraker,
   input: inputTraker,
   keydown: keydownTracker
