@@ -1,8 +1,5 @@
 const storage = require('./storage')
-const {
-  getKarma,
-  setKarma
-} = require('karma')
+const karma = require('karma')
 const clickable = require('./clickable')
 const {
   getKeyElements,
@@ -110,6 +107,7 @@ console.log('Monkey Driver is driving :)')
 
 Object.assign(drive, {
   storage,
+  karma,
   clickable,
   getKeyElements,
   getKeyTextNodes,
@@ -124,8 +122,6 @@ Object.assign(drive, {
   getTextBoundingClientRect,
   relax,
   trackers,
-  getKarma,
-  setKarma,
   formatDateTime
 })
 

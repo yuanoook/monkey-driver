@@ -12,6 +12,7 @@ const {
   getKeyTextNodes
 } = require('./getNodes')
 
+const INPUT_ACTION_REG = /[:]\s(.+)/
 const SNAPSHOT_SEPARATOR = '\0\0\0\0\0'
 const getKarmaSnapshots = () => getTrackLogs(TRACK_TYPES.SNAPSHOTS)
 
@@ -28,6 +29,7 @@ function getKarma () {
 }
 
 function setKarma (causes, results) {
+  causes = Array.from(new Set(causes))
   if (!causes || !causes.length) return
 
   results = results || getKarmaResults()
@@ -35,18 +37,28 @@ function setKarma (causes, results) {
 
   const karma = getKarma()
   for (let result of results) {
-    const rkarma = [...causes, ...(karma[result] || [])]
-    karma[result] = Array.from(new Set(rkarma))
+    for (let cause of causes) {
+      karma[result] = karma[result] || {}
+      karma[result][cause] = (karma[result][cause] | 0) + 1
+    }
   }
   storage.setValue('karma', karma)
 }
 
 const karmaAnalysts = {
   [TRACK_TYPES.ACTION]: (log, prevAction) => {
-    // TODO: add some cool stuff here
+    const [[content], [prevContent]] = [log, prevAction]
+    const [key] = content.split(INPUT_ACTION_REG)
+    const [prevKey] = prevContent.split(INPUT_ACTION_REG)
+
+    setKarma([prevKey, prevContent], [key, content])
   },
   [TRACK_TYPES.SNAPSHOTS]: (log, prevAction) => {
-    // TODO: add some cool stuff here
+    const [[content], [prevContent]] = [log, prevAction]
+    const results = content.split(SNAPSHOT_SEPARATOR)
+    const [prevKey] = prevContent.split(INPUT_ACTION_REG)
+
+    setKarma([prevKey, prevContent], results)
   }
 }
 
@@ -114,10 +126,12 @@ function analysisKarma () {
   return hit
 }
 
-module.exports = {
+const karma = {
   getKarma,
   setKarma,
   getKarmaResults,
   logKarmaResults,
   analysisKarma
 }
+
+module.exports = karma

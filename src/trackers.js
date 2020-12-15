@@ -53,7 +53,7 @@ const inputTraker = e => {
     label.replace(/\s*[:：]\s*$/, '').trim()
   }: ${
     (input.value || '').trim()
-  }`, /[:](.+)/)
+  }`, /[:]\s(.+)/)
 }
 
 const shortCuts = {
