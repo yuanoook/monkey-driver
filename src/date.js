@@ -1,3 +1,7 @@
+function getHighResTime () {
+  return performance.timeOrigin + performance.now()
+}
+
 function formatDateTime (date) {
   date = date ? new Date(date) : new Date()
   return `${
@@ -18,5 +22,6 @@ function formatDateTime (date) {
 }
 
 module.exports = {
+  getHighResTime,
   formatDateTime
 }

@@ -1,3 +1,11 @@
+const storageCache = {}
+
+function keepTheCache () {
+  for (let name in storageCache) {
+    GM_setValue(name, JSON.stringify(storageCache[name]))
+  }
+}
+
 function setValue (name, value) {
   return GM_setValue(name, JSON.stringify(value))
 }
