@@ -102,7 +102,7 @@ function getPrevActionLog ({
 }
 
 function analysisKarma () {
-  const {index: lastAnalysisIndex, allLogs} = getLastTrackInfo(TRACK_TYPES.ANALYSIS)
+  let {index: lastAnalysisIndex, allLogs} = getLastTrackInfo(TRACK_TYPES.ANALYSIS)
   lastAnalysisIndex = lastAnalysisIndex === allLogs.length ? -1 : lastAnalysisIndex
 
   const logs = allLogs.slice(lastAnalysisIndex + 1)
