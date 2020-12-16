@@ -30,9 +30,9 @@ function setTrackLogs (logs) {
 }
 
 function printTrackLogs (type) {
-  const trackLogs = getTrackLogs()
-  console.log(`m\`\n${
-    trackLogs.join('\n')
+  const trackLogs = getTrackLogs(type)
+  console.log(`monkeyDrive\`\n${
+    trackLogs.map(([,logContent]) => logContent).join('\n')
   }\``)
 }
 

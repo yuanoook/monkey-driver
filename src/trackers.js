@@ -32,7 +32,7 @@ const pushActionLog = (log, separator) => {
   printTrackLogs(TRACK_TYPES.ACTION)
 }
 
-const clickTraker = e => {
+const clickTracker = e => {
   if (isDashboardOpen()) return
   if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults()
 
@@ -44,7 +44,7 @@ const clickTraker = e => {
   }
 }
 
-const inputTraker = e => {
+const inputTracker = e => {
   if (isDashboardOpen()) return
   if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults()
 
@@ -72,11 +72,16 @@ const keydownTracker = e => {
   shortCuts[e.key]()
 }
 
+const beforeunloadTracker = e => {
+  console.log(document.activeElement.href)
+}
+
 const trackers = {
   clearTrackLogs,
   getTrackLogs,
-  click: clickTraker,
-  input: inputTraker,
+  beforeunload: beforeunloadTracker,
+  click: clickTracker,
+  input: inputTracker,
   keydown: keydownTracker
 }
 
