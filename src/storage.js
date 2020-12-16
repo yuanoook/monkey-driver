@@ -56,12 +56,12 @@ function getLastTrackInfo (type, maxIndex = Infinity) {
   const index = lastLog
     ? allLogs.indexOf(lastLog)
     : allLogs.length
-  return [lastLog, index, logs, allLogs]
+  return {lastLog, index, logs, allLogs}
 }
 
 function updateLastTrackLog (log) {
   const [,,type] = log
-  const [,index] = getLastTrackInfo(type)
+  const {index} = getLastTrackInfo(type)
   addTrackLog(log, index)
 }
 

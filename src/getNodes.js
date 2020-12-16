@@ -1,10 +1,5 @@
 const clickable = require('./clickable')
-const {
-  fromPoint,
-  textNodeFromPoint,
-  getRect,
-  getTextBoundingClientRect
-} = require('./point')
+const { fromPoint } = require('./point')
 
 function getKeyElements({ selector, filter, prioritize } = {}) {
   let nodes = Array.from(document.querySelectorAll(selector || '*'))

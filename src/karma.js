@@ -1,11 +1,7 @@
 const {
-  setValue,
-  getValue,
   TRACK_TYPES,
-  getTrackLogs,
   addTrackLog,
-  getLastTrackInfo,
-  updateLastTrackLog
+  getLastTrackInfo
 } = require('./storage')
 const relax = require('./relax')
 const {
@@ -14,11 +10,9 @@ const {
 
 const INPUT_ACTION_REG = /[:]\s(.+)/
 const SNAPSHOT_SEPARATOR = '\0\0\0\0\0'
-const getKarmaSnapshots = () => getTrackLogs(TRACK_TYPES.SNAPSHOTS)
 
 const pushKarmaSnapshot = shotContent => {
-  const snapshots = getKarmaSnapshots()
-  const [lastShot] = getLastTrackInfo(TRACK_TYPES.SNAPSHOTS)
+  const {lastLog: lastShot} = getLastTrackInfo(TRACK_TYPES.SNAPSHOTS)
   const [, lastContent] = lastShot || []
   if (lastContent === shotContent) return
 
@@ -93,7 +87,9 @@ function getPrevActionLog ({
 }) {
   const [logAt] = log
   if (!prevLog) {
-    [prevLog, prevLogIndex] = getLastTrackInfo(TRACK_TYPES.ACTION, lastAnalysisIndex)
+    const lastAction = getLastTrackInfo(TRACK_TYPES.ACTION, lastAnalysisIndex)
+    prevLog = lastAction.lastLog
+    prevLogIndex = lastAction.index
   }
   if (!prevLog) return
 
@@ -106,7 +102,7 @@ function getPrevActionLog ({
 }
 
 function analysisKarma () {
-  let [, lastAnalysisIndex, , allLogs] = getLastTrackInfo(TRACK_TYPES.ANALYSIS)
+  const {index: lastAnalysisIndex, allLogs} = getLastTrackInfo(TRACK_TYPES.ANALYSIS)
   lastAnalysisIndex = lastAnalysisIndex === allLogs.length ? -1 : lastAnalysisIndex
 
   const logs = allLogs.slice(lastAnalysisIndex + 1)

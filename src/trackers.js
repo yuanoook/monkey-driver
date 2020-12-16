@@ -1,13 +1,11 @@
 const {
   TRACK_TYPES,
   getTrackLogs,
-  setTrackLogs,
   printTrackLogs,
   clearTrackLogs,
   clearKarma,
   addTrackLog,
-  getLastTrackInfo,
-  updateLastTrackLog
+  getLastTrackInfo
 } = require('./storage')
 const { getInputLabel } = require('./getNodes')
 const {
@@ -24,7 +22,11 @@ const pushActionLog = (log, separator) => {
   logKarmaResults(true)
 
   const [key] = separator ? log.split(separator) : [log]
-  const [[,lastLog] = [NaN, NaN], lastIndex] = getLastTrackInfo(TRACK_TYPES.ACTION)
+  const {
+    lastLog: [,lastLog] = [NaN, NaN],
+    index: lastIndex
+  } = getLastTrackInfo(TRACK_TYPES.ACTION)
+
   const [lastKey] = (lastLog && separator) ? lastLog.split(separator) : [lastLog]
   const newLog = [+new Date(), log, TRACK_TYPES.ACTION]
 
