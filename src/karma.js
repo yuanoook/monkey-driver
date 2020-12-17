@@ -7,6 +7,7 @@ const relax = require('./relax')
 const {
   getClickableTextNodes
 } = require('./getNodes')
+const { getHighResTime } = require('./date')
 
 const INPUT_ACTION_REG = /[:]\s(.+)/
 const SNAPSHOT_SEPARATOR = '\0\0\0\0\0'
@@ -16,7 +17,7 @@ const pushKarmaSnapshot = shotContent => {
   const [, lastContent] = lastShot || []
   if (lastContent === shotContent) return
 
-  addTrackLog([+new Date(), shotContent, TRACK_TYPES.SNAPSHOTS])
+  addTrackLog([getHighResTime(), shotContent, TRACK_TYPES.SNAPSHOTS])
 }
 
 function getKarma () {
@@ -125,7 +126,7 @@ function analysisKarma () {
     hit = hit || karmaAnalysts[type](log, prevAction)
   }
 
-  if (hit) addTrackLog([+new Date(), , TRACK_TYPES.ANALYSIS])
+  if (hit) addTrackLog([getHighResTime(), , TRACK_TYPES.ANALYSIS])
   return hit
 }
 

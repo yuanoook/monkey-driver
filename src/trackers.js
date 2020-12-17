@@ -14,9 +14,8 @@ const {
   closeDashboard,
   refreshDashboard
 } = require('./dashboard')
-const {
-  logKarmaResults
-} = require('./karma')
+const { logKarmaResults } = require('./karma')
+const { getHighResTime } = require('./date')
 
 const pushActionLog = (log, separator) => {
   logKarmaResults(true)
@@ -28,7 +27,7 @@ const pushActionLog = (log, separator) => {
   } = getLastTrackInfo(TRACK_TYPES.ACTION)
 
   const [lastKey] = (lastLog && separator) ? lastLog.split(separator) : [lastLog]
-  const newLog = [+new Date(), log, TRACK_TYPES.ACTION]
+  const newLog = [getHighResTime(), log, TRACK_TYPES.ACTION]
 
   addTrackLog(newLog, key === lastKey ? lastIndex : undefined)
   printTrackLogs(TRACK_TYPES.ACTION)
