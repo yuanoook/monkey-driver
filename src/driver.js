@@ -68,21 +68,44 @@ const operateManual = command => {
   }
 }
 
+// TODO, fix this logic :D
+const operateKarma = command => {
+  const karmaNetwork = karma.getKarma()
+  const karmaNode = karmaNetwork[command]
+  let causes = Object.keys(karmaNode || {})
+  if (!causes.length) return
+
+  causes.sort((a, b) => karmaNode[b] - karmaNode[a])
+
+  for (let cause of causes) {
+    if (await execute(cause)) {
+      if (await execute(command)) {
+        return true
+      }
+    }
+  }
+}
+
 const execute = async command => {
   // Monkey Driver Rule No.1 - Click
-  if (await guessClick(command)) return
+  if (await guessClick(command)) return true
 
   // Monkey Driver Rule No.2 - Input
-  if (await guessInput(command)) return
+  if (await guessInput(command)) return true
 
   // Monkey Driver Rule No.3 - Manual
-  if (await operateManual(command)) return
+  if (await operateManual(command)) return true
+
+  // Monkey Driver Rule No.4 - Karma
+  if (await operateKarma(command)) return true
 
   // Monkey Driver is confused
   console.log(`Monkey has no idea what to do with ${command}`)
 }
 
 const drive = async scripts => {
+  scripts = Array.isArray(scripts) ? scripts : [scripts]
+
   const commands = scripts
     .join('\n')
     .split(/\n/)
@@ -98,8 +121,8 @@ const drive = async scripts => {
 window.monkeyDrive = drive
 
 Object.keys(trackers).forEach(key => {
-  document.addEventListener(key, e => e.isTrusted && trackers[key](e), true)
-  document.addEventListener(key, e => e.isTrusted && trackers[key](e), false)
+  window.addEventListener(key, e => e.isTrusted && trackers[key](e), true)
+  window.addEventListener(key, e => e.isTrusted && trackers[key](e), false)
 })
 
 console.log('Monkey Driver is driving :)')

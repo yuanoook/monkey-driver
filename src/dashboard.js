@@ -3,6 +3,7 @@ const {
   getTrackLogs
 } = require('./storage')
 const { formatDateTime } = require('./date')
+const { getKarma } = require('./karma')
 
 function hasDashboard () {
   return Boolean(document.body.querySelector('.monkey-driver-dashboard'))
@@ -57,9 +58,28 @@ function genDashboard () {
     </style>
     <div class="monkey-driver-dashboard-container">
       <h1 > Hello, I'm Monkey Driver! </h1>
-      <div class="monkey-driver-dashboard-content"></div>
+      <div class="monkey-driver-dashboard-content">
+        <div class="monkey-driver-dashboard-content-actions"></div>
+        <div class="monkey-driver-dashboard-content-karma"></div>
+      </div>
     </div>
   `
+
+  const clickHandlers = {
+    'monkey-driver-dashboard-content-karma-result': function (e) {
+      closeDashboard()
+      window.monkeyDrive(e.target.innerText.trim())
+    }
+  }
+
+  dashboard.addEventListener('click', e => {
+    for (let key in clickHandlers) {
+      if (e.target.classList.contains(key)) {
+        clickHandlers[key](e)
+      }
+    }
+  })
+
   document.body.appendChild(dashboard)
 }
 
@@ -74,15 +94,24 @@ function closeDashboard () {
 function openDashboard () {
   if (!hasDashboard()) genDashboard()
   document.body.classList.add('monkey-driver-dashboard-open')
-  renderContent()
+  renderActions()
+  renderKarma()
 }
 
-function renderContent () {
-  const content = document.querySelector('.monkey-driver-dashboard-content')
+function renderActions () {
+  const actionsNode = document.querySelector('.monkey-driver-dashboard-content-actions')
   const logs = getTrackLogs(TRACK_TYPES.ACTION)
-  content.innerHTML = logs.map(
+  actionsNode.innerHTML = logs.map(
     ([logAt, logContent]) => `${formatDateTime(logAt)} ${logContent}`
   ).join('<br/>')
+}
+
+function renderKarma () {
+  const karmaResultsNode = document.querySelector('.monkey-driver-dashboard-content-karma')
+  const logs = getKarma()
+  karmaResultsNode.innerHTML = Object.keys(logs)
+    .map(log => `<span class="monkey-driver-dashboard-content-karma-result">${log}</span>`)
+    .join('<br/>')
 }
 
 function toggleDashboard () {

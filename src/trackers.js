@@ -74,6 +74,7 @@ const keydownTracker = e => {
 }
 
 const beforeunloadTracker = e => {
+  if (e.eventPhase === Event.BUBBLING_PHASE) return
   console.log(document.activeElement.href)
 }
 
