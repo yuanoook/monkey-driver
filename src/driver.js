@@ -69,7 +69,8 @@ const operateManual = command => {
 }
 
 // TODO, fix this logic :D
-const operateKarma = command => {
+// TODO, set a cross-session task manage process
+const operateKarma = async command => {
   const karmaNetwork = karma.getKarma()
   const karmaNode = karmaNetwork[command]
   let causes = Object.keys(karmaNode || {})
