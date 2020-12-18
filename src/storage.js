@@ -27,7 +27,7 @@ const TRACK_TYPES = {
 function getTrackLogs (type) {
   const logs = storage.getValue('trackLogs') || []
   if (!type) return logs
-  return logs.filter(([,,logType]) => logType === type)
+  return logs.filter(({type: logType}) => logType === type)
 }
 
 function setTrackLogs (logs) {
@@ -37,7 +37,7 @@ function setTrackLogs (logs) {
 function printTrackLogs (type) {
   const trackLogs = getTrackLogs(type)
   console.log(`monkeyDrive\`\n${
-    trackLogs.map(([,logContent]) => logContent).join('\n')
+    trackLogs.map(({content}) => content).join('\n')
   }\``)
 }
 
@@ -46,6 +46,7 @@ function clearTrackLogs () {
 }
 
 function addTrackLog (log, index = NaN) {
+  log = {logAt: getHighResTime(), ...log}
   const logs = getTrackLogs()
   index = Number.isNaN(index) ? logs.length : index
   logs[index] = log
@@ -56,7 +57,7 @@ function addTrackLog (log, index = NaN) {
 function getLastTrackInfo (type, maxIndex = Infinity) {
   const allLogs = getTrackLogs()
   const logs = allLogs.filter(
-    ([,,logType], index) => logType === type && index < maxIndex
+    ({type: logType}, index) => logType === type && index < maxIndex
   )
   const lastLog = logs[logs.length - 1]
   const index = lastLog
@@ -66,8 +67,7 @@ function getLastTrackInfo (type, maxIndex = Infinity) {
 }
 
 function updateLastTrackLog (log) {
-  const [,,type] = log
-  const {index} = getLastTrackInfo(type)
+  const {index} = getLastTrackInfo(log.type)
   addTrackLog(log, index)
 }
 

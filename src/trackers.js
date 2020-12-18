@@ -17,17 +17,17 @@ const {
 const { logKarmaResults } = require('./karma')
 const { getHighResTime } = require('./date')
 
-const pushActionLog = (log, separator) => {
+const pushActionLog = (content, separator) => {
   logKarmaResults(true)
 
-  const [key] = separator ? log.split(separator) : [log]
+  const [key] = separator ? content.split(separator) : [content]
   const {
-    lastLog: [,lastLog] = [NaN, NaN],
+    lastLog: {content: lastLog} = {},
     index: lastIndex
   } = getLastTrackInfo(TRACK_TYPES.ACTION)
 
   const [lastKey] = (lastLog && separator) ? lastLog.split(separator) : [lastLog]
-  const newLog = [getHighResTime(), log, TRACK_TYPES.ACTION]
+  const newLog = {content, type: TRACK_TYPES.ACTION}
 
   addTrackLog(newLog, key === lastKey ? lastIndex : undefined)
   printTrackLogs(TRACK_TYPES.ACTION)
@@ -73,9 +73,9 @@ const keydownTracker = e => {
   shortCuts[e.key]()
 }
 
-addTrackLog([getHighResTime(), location.href, TRACK_TYPES.LOAD])
+addTrackLog({content: location.href, type: TRACK_TYPES.LOAD})
 const beforeunloadTracker = () => {
-  addTrackLog([getHighResTime(), document.activeElement.href, TRACK_TYPES.UNLOAD])
+  addTrackLog({content: location.href, target: document.activeElement.href, type: TRACK_TYPES.UNLOAD})
 }
 beforeunloadTracker.options = {once: true}
 

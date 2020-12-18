@@ -12,12 +12,12 @@ const { getHighResTime } = require('./date')
 const INPUT_ACTION_REG = /[:]\s(.+)/
 const SNAPSHOT_SEPARATOR = '\0\0\0\0\0'
 
-const pushKarmaSnapshot = shotContent => {
+const pushKarmaSnapshot = content => {
   const {lastLog: lastShot} = getLastTrackInfo(TRACK_TYPES.SNAPSHOTS)
-  const [, lastContent] = lastShot || []
-  if (lastContent === shotContent) return
+  const {content: lastContent} = lastShot || {}
+  if (lastContent === content) return
 
-  addTrackLog([getHighResTime(), shotContent, TRACK_TYPES.SNAPSHOTS])
+  addTrackLog({content, type: TRACK_TYPES.SNAPSHOTS})
 }
 
 function getKarma () {
@@ -46,15 +46,13 @@ function setKarma (causes, results) {
 }
 
 const karmaAnalysts = {
-  [TRACK_TYPES.ACTION]: (log, prevAction) => {
-    const [[, content], [, prevContent]] = [log, prevAction]
+  [TRACK_TYPES.ACTION]: ({content}, {content: prevContent}) => {
     const [key] = content.split(INPUT_ACTION_REG)
     const [prevKey] = prevContent.split(INPUT_ACTION_REG)
 
     setKarma([prevKey, prevContent], [key, content])
   },
-  [TRACK_TYPES.SNAPSHOTS]: (log, prevAction) => {
-    const [[, content], [, prevContent]] = [log, prevAction]
+  [TRACK_TYPES.SNAPSHOTS]: ({content}, {content: prevContent}) => {
     const results = content.split(SNAPSHOT_SEPARATOR)
     const [prevKey] = prevContent.split(INPUT_ACTION_REG)
 
@@ -86,7 +84,7 @@ function getPrevActionLog ({
   prevLogIndex,
   lastAnalysisIndex
 }) {
-  const [logAt] = log
+  const {logAt} = log
   if (!prevLog) {
     const lastAction = getLastTrackInfo(TRACK_TYPES.ACTION, lastAnalysisIndex)
     prevLog = lastAction.lastLog
@@ -94,7 +92,7 @@ function getPrevActionLog ({
   }
   if (!prevLog) return
 
-  const [preLogAt, prevLogContent, prevLogType] = prevLog
+  const {logAt: preLogAt, content: prevLogContent, type: prevLogType} = prevLog
 
   if (prevLogType !== TRACK_TYPES.ACTION) return
   if (logAt - preLogAt > 150 * 1000) return // 2.5 Minutes, too old
@@ -112,7 +110,7 @@ function analysisKarma () {
   let hit = false
   for (let i = 0; i < logs.length; i++) {
     const log = logs[i]
-    const [logAt, , type] = log
+    const {type} = log
     if (!karmaAnalysts[type]) continue
 
     const prevAction = getPrevActionLog({
@@ -126,7 +124,7 @@ function analysisKarma () {
     hit = hit || karmaAnalysts[type](log, prevAction)
   }
 
-  if (hit) addTrackLog([getHighResTime(), , TRACK_TYPES.ANALYSIS])
+  if (hit) addTrackLog({type: TRACK_TYPES.ANALYSIS})
   return hit
 }
 

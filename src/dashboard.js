@@ -102,7 +102,7 @@ function renderActions () {
   const actionsNode = document.querySelector('.monkey-driver-dashboard-content-actions')
   const logs = getTrackLogs(TRACK_TYPES.ACTION)
   actionsNode.innerHTML = logs.map(
-    ([logAt, logContent]) => `${formatDateTime(logAt)} ${logContent}`
+    ({logAt, content}) => `${formatDateTime(logAt)} ${content}`
   ).join('<br/>')
 }
 
