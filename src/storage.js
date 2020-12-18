@@ -1,18 +1,13 @@
-const storageCache = {}
-
-function keepTheCache () {
-  for (let name in storageCache) {
-    GM_setValue(name, JSON.stringify(storageCache[name]))
-  }
-}
-
 function setValue (name, value) {
-  return GM_setValue(name, JSON.stringify(value))
+  value = JSON.stringify(value)
+  // return GM_setValue(name, value)
+  return localStorage.setItem(`monkey_driver-${name}`, value)
 }
 
 function getValue (name) {
   try {
-    return JSON.parse(GM_getValue(name))
+    // return JSON.parse(GM_getValue(name))
+    return JSON.parse(localStorage.getItem(`monkey_driver-${name}`))
   } catch (e) {}
 }
 
