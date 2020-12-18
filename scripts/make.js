@@ -38,9 +38,9 @@ const modules = files
   .join('\n')
 
 const placeholder = /[^\n]*\/\*\*\*\*\* Your Code Here \*\*\*\*\*\//
-const version = /(\/\/ @version\s*)[^\n]*/
+const version = /#####version#####/g
 const content = read('template.js')
-  .replace(version, `$1${new Date().getTime()}`)
+  .replace(version, +new Date())
   .replace(placeholder, modules)
 
 exec(`cd ${__dirname}/..; mkdir dist || true;`)

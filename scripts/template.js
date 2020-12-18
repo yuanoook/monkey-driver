@@ -4,7 +4,7 @@
 // @description   Monkey Driver is the best driver
 // @copyright     2020, yuanoook (https://openuserjs.org/users/yuanoook)
 // @license       MIT
-// @version       14.0.0
+// @version       #####version#####
 // @include       *
 // @author        yuanoook
 // @grant         GM_setValue
@@ -15,6 +15,7 @@
 
 (function (window) {
   'use strict';
+  const monkeyDriverVersion = '#####version#####'
 
   /***** Your Code Here *****/
 })(window.unsafeWindow);

@@ -1,13 +1,28 @@
+const storageKeyPrefix = `monkey_driver-${monkeyDriverVersion}-`
+
+function cleanLagacyStorage () {
+  Object.keys(localStorage).forEach(key => {
+    if (
+      /monkey.?driver/i.test(key) &&
+      key.indexOf(storageKeyPrefix) !== 0
+    ) {
+      localStorage.removeItem(key)
+    }
+  })
+}
+
+cleanLagacyStorage()
+
 function setValue (name, value) {
   value = JSON.stringify(value)
   // return GM_setValue(name, value)
-  return localStorage.setItem(`monkey_driver-${name}`, value)
+  return localStorage.setItem(`${storageKeyPrefix}${name}`, value)
 }
 
 function getValue (name) {
   try {
     // return JSON.parse(GM_getValue(name))
-    return JSON.parse(localStorage.getItem(`monkey_driver-${name}`))
+    return JSON.parse(localStorage.getItem(`${storageKeyPrefix}${name}`))
   } catch (e) {}
 }
 
