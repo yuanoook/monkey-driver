@@ -40,8 +40,8 @@ function genDashboard () {
         left: 0;
         right: 0;
         bottom: 0;
-        width: 50vw;
-        height: 50vh;
+        width: 80vw;
+        height: 80vh;
         border-radius: 10px;
         background: white;
       }
@@ -54,6 +54,10 @@ function genDashboard () {
         overflow: scroll;
         background: rgba(250,250,250);
         padding: 10px;
+      }
+      .monkey-driver-dashboard-content-karma-result:hover {
+        cursor: pointer;
+        text-decoration: underline;
       }
     </style>
     <div class="monkey-driver-dashboard-container">
