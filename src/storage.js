@@ -17,9 +17,11 @@ function listValues () {
 }
 
 const TRACK_TYPES = {
-  ACTION: 1,
-  SNAPSHOTS: 2,
-  ANALYSIS: 3
+  ACTION: 'ACTION',
+  SNAPSHOTS: 'SNAPSHOTS',
+  ANALYSIS: 'ANALYSIS',
+  LOAD: 'LOAD',
+  UNLOAD: 'UNLOAD'
 }
 
 function getTrackLogs (type) {
@@ -48,6 +50,7 @@ function addTrackLog (log, index = NaN) {
   index = Number.isNaN(index) ? logs.length : index
   logs[index] = log
   setTrackLogs(logs)
+  console.log(log)
 }
 
 function getLastTrackInfo (type, maxIndex = Infinity) {

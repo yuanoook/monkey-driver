@@ -73,10 +73,11 @@ const keydownTracker = e => {
   shortCuts[e.key]()
 }
 
-const beforeunloadTracker = e => {
-  if (e.eventPhase === Event.BUBBLING_PHASE) return
-  console.log(document.activeElement.href)
+addTrackLog([getHighResTime(), location.href, TRACK_TYPES.LOAD])
+const beforeunloadTracker = () => {
+  addTrackLog([getHighResTime(), document.activeElement.href, TRACK_TYPES.UNLOAD])
 }
+beforeunloadTracker.options = {once: true}
 
 const trackers = {
   clearTrackLogs,

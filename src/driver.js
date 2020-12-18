@@ -122,8 +122,13 @@ const drive = async scripts => {
 window.monkeyDrive = drive
 
 Object.keys(trackers).forEach(key => {
-  window.addEventListener(key, e => e.isTrusted && trackers[key](e), true)
-  window.addEventListener(key, e => e.isTrusted && trackers[key](e), false)
+  const listener = trackers[key]
+  if (listener.options) {
+    window.addEventListener(key, e => e.isTrusted && listener(e), listener.options)
+  } else {
+    window.addEventListener(key, e => e.isTrusted && listener(e), true)
+    window.addEventListener(key, e => e.isTrusted && listener(e), false)
+  }
 })
 
 console.log('Monkey Driver is driving :)')
