@@ -71,11 +71,9 @@ function addTrackLog (log, index = NaN) {
 
 function getLastTrackInfo (type, maxIndex = Infinity) {
   const allLogs = getTrackLogs()
-  const logs = maxIndex === Infinity
-    ? allLogs
-    : allLogs.filter(
-      ({type: logType}, index) => logType === type && index < maxIndex
-    )
+  const logs = allLogs.filter(
+    ({type: logType}, index) => logType === type && index < maxIndex
+  )
   const lastLog = logs[logs.length - 1]
   const index = lastLog
     ? allLogs.indexOf(lastLog)

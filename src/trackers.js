@@ -7,6 +7,7 @@ const {
   addTrackLog,
   getLastTrackInfo
 } = require('./storage')
+const { getNodeLabels } = require('./label')
 const { getInputLabel } = require('./getNodes')
 const {
   isDashboardOpen,
@@ -37,11 +38,9 @@ const clickTracker = e => {
   if (e.eventPhase === Event.BUBBLING_PHASE) return logKarmaResults()
 
   const node = fromPoint(e.clientX, e.clientY)
-  if (node.nodeType == 3) {
-    pushActionLog(node.data.trim())
-  } else {
-    console.log(node)
-  }
+  const labels = getNodeLabels(node)
+
+  if (labels && labels[0]) pushActionLog(labels[0])
 }
 
 const inputTracker = e => {

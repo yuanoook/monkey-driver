@@ -21,9 +21,9 @@ function isLoading () {
 function isPageUnloaded () {
   const logs = getTrackLogs()
   for (let i = logs.length; i > 0; i --) {
-    log = logs[i - 1]
-    if (log.type === TRACK_TYPES.LOAD) return false
-    if (log.type === TRACK_TYPES.UNLOAD) return true
+    const {type} = logs[i - 1]
+    if (type === TRACK_TYPES.LOAD) return false
+    if (type === TRACK_TYPES.UNLOAD) return true
   }
 }
 
