@@ -88,6 +88,8 @@ const operateKarma = async command => {
 }
 
 const execute = async command => {
+  await relax(100)
+
   // Monkey Driver Rule No.1 - Click
   if (await guessClick(command)) return true
 
@@ -113,10 +115,7 @@ const drive = async scripts => {
     .map(c => c.trim())
     .filter(c => c)
 
-  for (let command of commands) {
-    await relax(100)
-    await execute(command)
-  }
+  for (let command of commands) await execute(command)
 }
 
 window.monkeyDrive = drive

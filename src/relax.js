@@ -1,4 +1,7 @@
-const relax = require('./relax')
+const {
+  TRACK_TYPES,
+  getTrackLogs
+} = require('./storage')
 const { getKeyElementsWithText } = require('./getNodes')
 
 const nap = ms => new Promise(r => setTimeout(r, ms))
@@ -15,12 +18,23 @@ function isLoading () {
   return loadings.length >= nodes.length / 2
 }
 
+function isPageUnloaded () {
+  const logs = getTrackLogs()
+  for (let i = logs.length; i > 0; i --) {
+    log = logs[i - 1]
+    if (log.type === TRACK_TYPES.LOAD) return false
+    if (log.type === TRACK_TYPES.UNLOAD) return true
+  }
+}
+
 async function waitLoading () {
   await nap(100)
   return isLoading() ? waitLoading() : null
 }
 
 async function relax (ms = 100) {
+  if (isPageUnloaded()) await nap(10 * 60 * 1000)
+
   await waitLoading()
   await nap(ms)
 }

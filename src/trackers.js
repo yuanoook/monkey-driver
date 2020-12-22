@@ -15,7 +15,6 @@ const {
   refreshDashboard
 } = require('./dashboard')
 const { logKarmaResults } = require('./karma')
-const { getHighResTime } = require('./date')
 
 const pushActionLog = (content, separator) => {
   logKarmaResults(true)
