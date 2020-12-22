@@ -1,7 +1,18 @@
 const { hashJoaat } = require('./hash')
 
 function innerHTMLHash (innerHTML) {
-  return hashJoaat(innerHTML.replace(/\s?data[^=]*?((="[^"]*")|\s)/g, ''))
+  const unwantedAttrs = ['id', 'data', 'class', 'style', 'stroke', 'stroke-width']
+
+  for (let attr of unwantedAttrs) {
+    const attrReg = new RegExp(`${ attr }[^=]*?="[^"]*"`, 'g')
+    innerHTML = innerHTML
+      .replace(attrReg, '')
+      .replace(/\s+/g, ' ')
+      .replace(/\s+>/g, '>')
+      .replace(/>\s+</g, '><')
+  }
+
+  return hashJoaat(innerHTML)
 }
 
 const labelGenerators = {
