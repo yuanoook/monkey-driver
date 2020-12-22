@@ -1,7 +1,14 @@
 const { hashJoaat } = require('./hash')
 
 const labelGenerators = {
-  svg: node => [`svg-${hashJoaat(node.innerHTML)}`]
+  svg: node => [`svg-${hashJoaat(node.innerHTML)}`],
+  img: node => {
+    const label = /^http/.test(node.src)
+      ? node.src.replace(location.origin, '')
+      : `img-${hashJoaat(node.src)}`
+
+    return [label]
+  }
 }
 
 function getNodeLabels (node) {
