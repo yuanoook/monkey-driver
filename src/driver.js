@@ -80,24 +80,28 @@ const operateManual = command => {
 
 // TODO, fix this logic :D
 // TODO, set a cross-session task manage process
-const operateKarma = async command => {
+const operateKarma = async (command, history) => {
+  history = history || []
+  history.push(command)
+
   const karmaNetwork = karma.getKarma()
   const karmaNode = karmaNetwork[command]
-  let causes = Object.keys(karmaNode || {})
-  if (!causes.length) return
+  const causes = Object.keys(karmaNode || {})
+    .filter(cause => !history.includes(cause))
+    .sort((a, b) => karmaNode[b] - karmaNode[a])
 
-  causes.sort((a, b) => karmaNode[b] - karmaNode[a])
+  if (!causes.length) return false
 
   for (let cause of causes) {
-    if (await execute(cause)) {
-      if (await execute(command)) {
+    if (await execute(cause, history)) {
+      if (await execute(command, history)) {
         return true
       }
     }
   }
 }
 
-const execute = async command => {
+const execute = async (command, history) => {
   await relax(100)
 
   // Monkey Driver Rule No.1 - Click
@@ -110,7 +114,7 @@ const execute = async command => {
   if (await operateManual(command)) return true
 
   // Monkey Driver Rule No.4 - Karma
-  if (await operateKarma(command)) return true
+  if (await operateKarma(command, history)) return true
 
   // Monkey Driver is confused
   console.log(`Monkey has no idea what to do with ${command}`)
