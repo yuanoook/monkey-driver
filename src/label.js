@@ -33,6 +33,7 @@ const labelGenerators = {
 
 function getNodeLabels (node) {
   if (node.nodeType == 3) return [node.data.trim().toLowerCase()]
+  if (node.ownerSVGElement) node = node.ownerSVGElement
 
   const tag = node.tagName.toLowerCase()
   if (labelGenerators[tag]) return labelGenerators[tag](node)
