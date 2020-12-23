@@ -93,6 +93,7 @@ const operateKarma = async (command, history) => {
   if (!causes.length) return false
 
   for (let cause of causes) {
+    history.push(cause)
     if (await execute(cause, history)) {
       if (await execute(command, history)) {
         return true
