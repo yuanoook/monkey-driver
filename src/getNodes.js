@@ -41,9 +41,10 @@ function getPageImageLabels () {
 
 function getInputLabels () {
   const inputs = getKeyElements({selector: 'input'})
-  return inputs.map(
-    input => `${getInputLabel()}: ${(input.value || ''.trim())}`
-  )
+  return inputs.map(input => {
+    const label = getInputLabel(input)
+    return [label, `${label}: ${(input.value || ''.trim())}`]
+  }).flat()
 }
 
 function getPageTextLabels () {
