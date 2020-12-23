@@ -21,7 +21,10 @@ const labelGenerators = {
   },
   img: node => {
     const label = /^http/.test(node.src)
-      ? node.src.replace(location.origin, '')
+      ? node.src
+        .replace(/^https?:\/\/[^\/]*/, '')
+        .replace(/(\?|\#).*/g,'')
+        .replace(/^\s*\/*/g, '')
       : `img-${hashJoaat(node.src)}`
 
     return [label]

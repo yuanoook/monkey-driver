@@ -1,5 +1,6 @@
 const clickable = require('./clickable')
 const { fromPoint } = require('./point')
+const { getNodeLabels } = require('./label')
 
 function getKeyElements({ selector, filter, prioritize } = {}) {
   let nodes = Array.from(document.querySelectorAll(selector || '*'))
@@ -56,8 +57,11 @@ function getKeyElementsWithText({
   return prioritize ? prioritize(elements) : elements
 }
 
-function getKeyImages() {
-  return getKeyElements({ selector: 'img, svg' })
+function getKeyImages(label) {
+  const nodes = getKeyElements({ selector: 'img, svg' })
+  return label
+    ? nodes.filter(node => getNodeLabels(node).includes(label))
+    : nodes
 }
 
 function getKeyButtonsAndLinks(text = '') {

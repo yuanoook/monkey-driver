@@ -30,12 +30,22 @@ const handleCommand = ({ handler, content }) => {
   return node ? handler.run(node, content) : null
 }
 
-const guessClick = command => {
-  // if there's a button/link/li with text which is exactly the command, click it
+const guessImagesClick = command => {
+  const image = getKeyImages(command)[0]
+  if (!image) return false
+  image.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true}))
+  return true
+}
+
+const guessButtonsLinksClick = command => {
   const button = getKeyButtonsAndLinks(command)[0]
   if (!button) return false
-  button.click()
+  button.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true}))
   return true
+}
+
+const guessClick = command => {
+  return guessButtonsLinksClick(command) || guessImagesClick(command)
 }
 
 const guessInput = async command => {
@@ -49,9 +59,9 @@ const guessInput = async command => {
   await relax(100)
   if (content) {
     input.value = content
-    input.dispatchEvent(new Event('input'))
+    input.dispatchEvent(new Event('input', {bubbles: true, cancelable: true}))
     await relax(100)
-    input.dispatchEvent(new Event('change'))
+    input.dispatchEvent(new Event('change', {bubbles: true, cancelable: true}))
   }
   return true
 }
