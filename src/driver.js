@@ -39,7 +39,7 @@ const guessImagesClick = command => {
 
 const guessButtonsLinksClick = command => {
   const button = getKeyButtonsAndLinks(command)[0]
-  if (!button) return false
+  if (!button || button.disabled) return false
   button.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true}))
   return true
 }
