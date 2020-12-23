@@ -5,9 +5,8 @@ const {
 } = require('./storage')
 const relax = require('./relax')
 const {
-  getClickableTextNodes
+  getPageLabels
 } = require('./getNodes')
-const { getHighResTime } = require('./date')
 
 const INPUT_ACTION_REG = /[:]\s(.+)/
 const SNAPSHOT_SEPARATOR = '\0\0\0\0\0'
@@ -61,9 +60,7 @@ const karmaAnalysts = {
 }
 
 function getKarmaResults () {
-  return getClickableTextNodes({
-    filterMap: textNode => textNode.data.trim().toLowerCase()
-  }).sort()
+  return getPageLabels()
 }
 
 async function logKarmaResults (immediate = false) {

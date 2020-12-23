@@ -34,6 +34,32 @@ function getClickableTextNodes({
   return Array.from(results)
 }
 
+function getPageImageLabels () {
+  const images = getKeyImages()
+  return images.map(getNodeLabels).flat()
+}
+
+function getInputLabels () {
+  const inputs = getKeyElements({selector: 'input'})
+  return inputs.map(
+    input => `${getInputLabel()}: ${(input.value || ''.trim())}`
+  )
+}
+
+function getPageTextLabels () {
+  return getClickableTextNodes({
+    filterMap: textNode => textNode.data.trim().toLowerCase()
+  })
+}
+
+function getPageLabels () {
+  return Array.from(new Set([
+    ...getPageTextLabels(),
+    ...getInputLabels(),
+    ...getPageImageLabels()
+  ])).sort()
+}
+
 function getKeyElementsWithText({
   selector,
   filter,
@@ -171,11 +197,13 @@ function getGuessLabelText(input) {
 }
 
 function getInputLabel(input) { 
-  return input.name ||
+  return (
+    input.name ||
     input.placeholder ||
     getRealLabelText(input) ||
     getGuessLabelText(input) ||
     ''
+  ).toLowerCase().trim()
 }
 
 module.exports = {
@@ -185,5 +213,6 @@ module.exports = {
   getKeyInputs,
   getInputLabel,
   getKeyImages,
-  getKeyButtonsAndLinks
+  getKeyButtonsAndLinks,
+  getPageLabels,
 }
