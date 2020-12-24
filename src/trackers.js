@@ -57,7 +57,7 @@ const inputTracker = e => {
 }
 
 const shortCuts = {
-  "0": () => (clearTrackLogs(), clearKarma(), refreshDashboard()),
+  "0": () => (clearTrackLogs(false), clearKarma(), refreshDashboard()),
   "1": toggleDashboard,
   "Escape": closeDashboard
 }

@@ -66,8 +66,8 @@ function printTrackLogs (type) {
   }\``)
 }
 
-function clearTrackLogs () {
-  return setTrackLogs([], true)
+function clearTrackLogs (persist = true) {
+  return setTrackLogs([], persist)
 }
 
 function addTrackLog (log, index = NaN) {

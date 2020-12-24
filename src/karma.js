@@ -23,8 +23,8 @@ function getKarma () {
   return storage.getValue('karma') || {}
 }
 
-function clearKarma () {
-  return storage.setValue('karma', {}, true)
+function clearKarma (persist = true) {
+  return storage.setValue('karma', {}, persist)
 }
 
 function setKarma (causes, results) {
