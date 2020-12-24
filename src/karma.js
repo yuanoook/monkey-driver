@@ -78,7 +78,6 @@ async function logKarmaResults (immediate = false) {
 function getPrevActionLog ({
   log,
   prevLog,
-  prevLogIndex,
   lastAnalysisIndex
 }) {
   const {logAt} = log
@@ -113,7 +112,6 @@ function analysisKarma () {
     const prevAction = getPrevActionLog({
       log,
       prevLog: logs[i - 1],
-      prevLogIndex: i - 1,
       lastAnalysisIndex
     })
     if (!prevAction) continue
