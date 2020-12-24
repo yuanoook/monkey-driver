@@ -13,17 +13,27 @@ function cleanLagacyStorage () {
 
 cleanLagacyStorage()
 
-function setValue (name, value) {
-  value = JSON.stringify(value)
-  // return GM_setValue(name, value)
-  return localStorage.setItem(`${storageKeyPrefix}${name}`, value)
+let memoryStorage = null
+
+function retrieveStorage () {
+  try {
+    memoryStorage = JSON.parse(localStorage.getItem(storageKeyPrefix) || '{}')
+  } catch (e) {}
+}
+
+function persistStorage () {
+  localStorage.setItem(storageKeyPrefix, JSON.stringify(memoryStorage))
+}
+
+function setValue (name, value, persist = false) {
+  if (!memoryStorage) retrieveStorage()
+  memoryStorage[name] = value
+  if (persist) persistStorage()
 }
 
 function getValue (name) {
-  try {
-    // return JSON.parse(GM_getValue(name))
-    return JSON.parse(localStorage.getItem(`${storageKeyPrefix}${name}`))
-  } catch (e) {}
+  if (!memoryStorage) retrieveStorage()
+  return memoryStorage[name]
 }
 
 function listValues () {
@@ -45,8 +55,8 @@ function getTrackLogs (type) {
   return logs.filter(({type: logType}) => logType === type)
 }
 
-function setTrackLogs (logs) {
-  return storage.setValue('trackLogs', logs)
+function setTrackLogs (logs, persist = false) {
+  return storage.setValue('trackLogs', logs, persist)
 }
 
 function printTrackLogs (type) {
@@ -57,7 +67,7 @@ function printTrackLogs (type) {
 }
 
 function clearTrackLogs () {
-  return setTrackLogs([])
+  return setTrackLogs([], true)
 }
 
 function addTrackLog (log, index = NaN) {
@@ -65,7 +75,7 @@ function addTrackLog (log, index = NaN) {
   const logs = getTrackLogs()
   index = Number.isNaN(index) ? logs.length : index
   logs[index] = log
-  setTrackLogs(logs)
+  setTrackLogs(logs, log.type === TRACK_TYPES.UNLOAD)
   console.log(log)
 }
 

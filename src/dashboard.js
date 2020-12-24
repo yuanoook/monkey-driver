@@ -106,7 +106,11 @@ function renderActions () {
   const actionsNode = document.querySelector('.monkey-driver-dashboard-content-actions')
   const logs = getTrackLogs(TRACK_TYPES.ACTION)
   actionsNode.innerHTML = logs.map(
-    ({logAt, content}) => `${formatDateTime(logAt)} ${content}`
+    ({logAt, content}) => `${
+      formatDateTime(logAt)
+    } <span class="monkey-driver-dashboard-content-karma-result">${
+      content
+    }</span>`
   ).join('<br/>')
 }
 
