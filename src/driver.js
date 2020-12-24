@@ -99,12 +99,13 @@ const operateKarma = async (command, history) => {
         return true
       }
     }
+    if (await straightExecute(command)) {
+      return true
+    }
   }
 }
 
-const execute = async (command, history) => {
-  await relax(100)
-
+const straightExecute = async (command) => {
   // Monkey Driver Rule No.1 - Click
   if (await guessClick(command)) return true
 
@@ -113,6 +114,12 @@ const execute = async (command, history) => {
 
   // Monkey Driver Rule No.3 - Manual
   if (await operateManual(command)) return true
+}
+
+const execute = async (command, history) => {
+  await relax(100)
+
+  if (await straightExecute(command)) return true
 
   // Monkey Driver Rule No.4 - Karma
   if (await operateKarma(command, history)) return true
