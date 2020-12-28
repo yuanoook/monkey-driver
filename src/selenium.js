@@ -1,4 +1,4 @@
-import { driver } from './driver'
+const { driver } = require('./driver')
 
 async function callbackScript ({webDriver, script}) {
   const [result, error] = await webDriver.executeAsyncScript(`
