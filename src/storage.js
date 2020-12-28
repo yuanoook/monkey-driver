@@ -61,7 +61,7 @@ function setTrackLogs (logs, persist = false) {
 
 function printTrackLogs (type) {
   const trackLogs = getTrackLogs(type)
-  console.log(`monkeyDrive\`\n${
+  console.log(`monkeyDriver\`\n${
     trackLogs.map(({content}) => content).join('\n')
   }\``)
 }

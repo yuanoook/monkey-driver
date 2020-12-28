@@ -72,7 +72,7 @@ function genDashboard () {
   const clickHandlers = {
     'monkey-driver-dashboard-content-karma-result': function (e) {
       closeDashboard()
-      window.monkeyDrive(e.target.innerText.trim())
+      window.monkeyDriver(e.target.innerText.trim())
     }
   }
 

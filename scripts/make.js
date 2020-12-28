@@ -20,7 +20,8 @@ const allowList = [
   'dashboard.js',
   'trackers.js',
 
-  'driver.js'
+  'driver.js',
+  'selenium.js'
 ]
 const read = (f, dir='') => fs.readFileSync(
   path.resolve(__dirname, dir, f),

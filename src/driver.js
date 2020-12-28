@@ -128,7 +128,7 @@ const execute = async (command, history) => {
   console.log(`Monkey has no idea what to do with ${command}`)
 }
 
-const drive = async scripts => {
+const driver = async scripts => {
   scripts = Array.isArray(scripts) ? scripts : [scripts]
 
   const commands = scripts
@@ -140,7 +140,10 @@ const drive = async scripts => {
   for (let command of commands) await execute(command)
 }
 
-window.monkeyDrive = drive
+if (window.monkeyDriver) {
+  console.warn(`Another version of monkeyDriver@${window.monkeyDriver.version} already installed!`)
+}
+window.monkeyDriver = driver
 
 Object.keys(trackers).forEach(key => {
   const listener = trackers[key]
@@ -154,7 +157,8 @@ Object.keys(trackers).forEach(key => {
 
 console.log('Monkey Driver is driving :)')
 
-Object.assign(drive, {
+Object.assign(driver, {
+  version: monkeyDriverVersion,
   storage,
   karma,
   clickable,
@@ -171,9 +175,10 @@ Object.assign(drive, {
   getTextBoundingClientRect,
   relax,
   trackers,
-  formatDateTime
+  formatDateTime,
+  installMonkeyDriver
 })
 
 module.exports = {
-  drive
+  driver
 }

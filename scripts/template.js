@@ -13,9 +13,12 @@
 // @github        https://github.com/yuanoook/monkey-driver
 // ==/UserScript==
 
-(function (window) {
+(function installMonkeyDriver (
+  window,
+  monkeyDriverVersion = '#####version#####'
+) {
   'use strict';
-  const monkeyDriverVersion = '#####version#####'
 
   /***** Your Code Here *****/
-})(window.unsafeWindow);
+
+})(window.unsafeWindow || window);
